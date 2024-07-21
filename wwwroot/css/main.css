@@ -1,0 +1,62 @@
+﻿
+body {
+    font-family: "Inter";
+    color: white;
+    background-color: #E9ECEF;
+}
+
+.bg-blue-dark {
+    background-color: #084298;
+}
+
+.bg-blue {
+    background-color: #0A58CA;
+}
+
+.bg-blue-light {
+    background-color: #3D88FD;
+}
+
+.bg-gray-dark {
+    background-color: #495057;
+}
+
+.sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 48px;
+    height: 100vh;
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.navbar-brand {
+    margin-right: 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.navbar .form-control {
+    padding: .75rem 1rem;
+    border-width: 0;
+    border-radius: 0;
+}
+
+
+.navbar-search {
+    color: white;
+    border-color: #495057;
+}
+
+.navbar-search::placeholder {
+    color: #bbb;
+}
+
+.nav-link {
+    color: white;
+}
+
+.nav-link:hover {
+    color: #DEE2E6;
+}
