@@ -1,6 +1,6 @@
 ﻿/* Light Theme Variables */
 :root {
-    --background-color: #E9ECEF;
+    --background-color: #F8F9FA;
     --text-color: black;
     --contrast-text: white;
 
@@ -14,6 +14,9 @@
     --secondary-main: #ADB5BD;
     --secondary-dark: #495057;
     --secondary-light: #CED4DA;
+
+    --editable-text: #6C757D;
+    --editable-text-hover: #495057;
 
     --hover-color: #DEE2E6;
     --placeholder-color: #bbb;

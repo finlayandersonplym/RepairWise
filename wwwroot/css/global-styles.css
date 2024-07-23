@@ -4,6 +4,7 @@ body {
     background-color: var(--background-color);
 }
 
+
 /* Utility Classes */
 .bg-blue-dark {
     background-color: var(--primary-dark);
@@ -21,8 +22,27 @@ body {
     color: var(--primary-light);
 }
 
-
 .border-style {
-    border-width: 1.5px;
+    border-width: 1px;
     border-color: var(--border-color);
+}
+
+.editable-text {
+    color: var(--editable-text);
+}
+
+.editable-text:hover {
+    color: var(--editable-text-hover);
+}
+
+.active-editable {
+    color: var(--text-color);
+    border-radius: 6px;
+    padding: 3px;
+    outline-color: var(--border-color);
+    outline: 0.5px solid;
+}
+
+.edited-text:hover {
+    color: var(--editable-text-hover);
 }
