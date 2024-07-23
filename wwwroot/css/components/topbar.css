@@ -1,0 +1,19 @@
+﻿/* Topbar Styles */
+.topbar {
+    position: fixed;
+    margin-left: 150px;
+    height: 45px;
+    width: 100%;
+    background-color: var(--secondary-dark);
+}
+
+.navbar-search {
+    color: var(--contrast-text);
+    border-color: var(--secondary-dark);
+    background-color: var(--secondary-dark);
+    height: 100%;
+}
+
+.navbar-search::placeholder {
+    color: var(--placeholder-color);
+}

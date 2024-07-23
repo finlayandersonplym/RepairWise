@@ -1,0 +1,26 @@
+﻿/* Light Theme Variables */
+:root {
+    --background-color: #E9ECEF;
+    --text-color: black;
+    --contrast-text: white;
+
+    --primary-main: #0A58CA;
+    --primary-dark: #084298;
+    --primary-light: #3D88FD;
+
+    --success-main: #479F76;
+    --success-dark: #198754;
+
+    --secondary-main: #ADB5BD;
+    --secondary-dark: #495057;
+    --secondary-light: #CED4DA;
+
+    --hover-color: #DEE2E6;
+    --placeholder-color: #bbb;
+    --border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+
+}

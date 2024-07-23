@@ -1,0 +1,18 @@
+﻿/* Navbar Styles */
+.navbar-brand {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.nav-link {
+    color: var(--contrast-text);
+    text-align: center;
+}
+
+.nav-item {
+    width: 100%;
+}
+
+.nav-link:hover {
+    color: var(--hover-color);
+}

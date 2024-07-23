@@ -1,0 +1,20 @@
+﻿.btn {
+    border-width: 0.5px;
+    border-color: var(--border-color);
+}
+
+.btn-success {
+    background-color: var(--success-main);
+}
+
+.btn-success:hover {
+    background-color: var(--success-dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-light)
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-main);
+}

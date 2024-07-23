@@ -1,0 +1,13 @@
+﻿/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    width: 150px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.brand {
+    padding: 6px;
+    color: var(--contrast-text);
+}

@@ -1,0 +1,28 @@
+﻿/* Global Styles */
+body {
+    font-family: "Inter", sans-serif;
+    background-color: var(--background-color);
+}
+
+/* Utility Classes */
+.bg-blue-dark {
+    background-color: var(--primary-dark);
+}
+
+.bg-blue {
+    background-color: var(--primary-main);
+}
+
+.bg-blue-light {
+    background-color: var(--primary-light);
+}
+
+.blue-light {
+    color: var(--primary-light);
+}
+
+
+.border-style {
+    border-width: 1.5px;
+    border-color: var(--border-color);
+}

@@ -2,6 +2,40 @@
     <link href="css/inventory.css" rel="stylesheet">
 </head>
 
-<div class="item-table">
+<div id="inventory" class="container-fluid p-0">
 
+    <dialog>
+        heyyyyasdddddd
+    </dialog>
+
+    <div id="item-selector" class="border-style d-none d-sm-block">
+        <div id="item-management" class="border-style">
+            <div id="item-select-dropdown" role="button">
+                Active Items
+                <i class="bi bi-caret-down-fill blue-light"></i>
+            </div>
+            <button type="button" class="btn btn-success" id="add-items-button">
+                <i class="bi bi-plus-circle"></i>
+                New
+            </button>
+            <button type="button" class="btn btn-secondary" id="options-dropdown">
+                <i style="color:black" class="bi bi-three-dots-vertical"></i>
+            </button>
+        </div>
+
+
+        <div>
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></th>
+                        <td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 150px;">Dierya DK63</td>
+                        <td style="text-align:right; padding-right: 50px">£15</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
