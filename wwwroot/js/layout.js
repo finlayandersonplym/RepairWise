@@ -5,11 +5,14 @@ function activePage() {
         $(".nav-link").removeClass("active");
         $(this).addClass("active");
         let page = $(this).data("page");
-        $("#page-content").load(page + ".html");
+
+        console.log("Loading: " + page)
+
+        $("#page-content").load("pages/" + page + ".html");
     });
 }
 
 $(document).ready(function () {
-    $("#page-content").load("dashboard.html");
+    $("#page-content").load("pages/dashboard.html");
     activePage();
 });

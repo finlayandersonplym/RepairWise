@@ -1,7 +1,7 @@
 ﻿
 body {
     font-family: "Inter";
-    color: white;
+    color: black;
     background-color: #E9ECEF;
 }
 
@@ -21,32 +21,40 @@ body {
     background-color: #495057;
 }
 
-.sidebar-sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 48px;
-    height: 100vh;
-    padding-top: .5rem;
+#page-content {
+    margin-left: 150px;
+    padding-top: 45px;
+}
+
+.brand {
+    padding: 6px;
+    color: white;
+}
+
+.sidebar {
+    position: fixed;
+    width: 150px;
+    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 .navbar-brand {
-    margin-right: 0;
     font-size: 22px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
-.navbar .form-control {
-    padding: .75rem 1rem;
-    border-width: 0;
-    border-radius: 0;
+.topbar {
+    position: fixed;
+    margin-left: 150px;
+    height: 45px;
+    width: 100%;
 }
-
 
 .navbar-search {
     color: white;
     border-color: #495057;
+    height: 100%;
 }
 
 .navbar-search::placeholder {
