@@ -5,6 +5,10 @@
     overflow: auto;
 }
 
+#selection-loader {
+    overflow: auto;
+}
+
 #item-select-dropdown {
     padding-left: 10px;
 }
@@ -43,7 +47,6 @@
 #item-name-header {
     display: flex;
     min-height: 50px;
-    padding: 6px 20px;
     border-bottom-style: solid;
 }
 
@@ -55,3 +58,19 @@
     cursor: pointer;
 }
 
+#editing-section {
+    padding: 12px 0px 12px;
+}
+
+#state { 
+    margin-top: 8px;
+}
+
+#description-text {
+    min-height: 90px;
+}
+
+.margin-x {
+    margin-left: 20px;
+    margin-right: 20px;
+}

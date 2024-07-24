@@ -1,13 +1,10 @@
-import { initializeEditableText } from "../components/editable-text.js";
-
-import { newItem } from "./new-item.js";
+import { createNewItem } from "./item-editor.js";
 
 
 
 $(document).ready(function () {
-    // Creates new inventory item and adds to JSON
-    newItem();
-
-    // Makes item name editable for the given property and updates JSON
-    initializeEditableText("item-name", "name");
+    // loads item HTML and adds blank item to json
+    $("#add-items-button").click(() => {
+        createNewItem();
+    });
 });

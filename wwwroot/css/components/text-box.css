@@ -1,0 +1,20 @@
+﻿.text-box {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    border-color: var(--border-color);
+    overflow: hidden;
+}
+
+.text-box:empty:before {
+    content: attr(data-placeholder);
+    color: #aaa;
+}
+
+.text-box:focus::placeholder {
+    color: transparent;
+}
+
+.text-box:focus {
+    outline-color: var(--primary-light);
+}

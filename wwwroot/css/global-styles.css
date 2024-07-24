@@ -27,6 +27,10 @@ body {
     border-color: var(--border-color);
 }
 
+::placeholder {
+    color: var(--editable-text);
+}
+
 .editable-text {
     color: var(--editable-text);
 }
@@ -46,3 +50,9 @@ body {
 .edited-text:hover {
     color: var(--editable-text-hover);
 }
+
+h3 {
+    font-size: 18px;
+    font-weight: 400;
+}
+

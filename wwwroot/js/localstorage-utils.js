@@ -60,3 +60,16 @@ export function updateJsonItemProperty(key, updateProperty, updateValue, matchPr
 
     localStorage.setItem(key, JSON.stringify(currentValue));
 }
+
+/**
+ * Handles the input event for a contenteditable element, updating the corresponding property in localStorage.
+ *
+ * @param {Event} event - The input event triggered on the contenteditable element.
+ * @param {string} updateProperty - The property to be updated with the new value.
+ */
+export function updateInput(event, updateProperty) {
+    const textElement = $(event.currentTarget);
+    let elementId = textElement.attr("data-id");
+
+    updateJsonItemProperty("itemList", updateProperty, textElement.text(), "id", elementId);
+}
