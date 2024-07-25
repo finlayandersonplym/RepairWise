@@ -1,6 +1,7 @@
 ﻿
 .editable-text {
     color: var(--editable-text);
+    cursor: pointer;
 }
 
 .editable-text:hover {

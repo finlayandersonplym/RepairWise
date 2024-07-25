@@ -47,5 +47,22 @@ h3 {
 }
 
 .editable-box:focus:hover {
-    border: 1px solid var(--primary-light);
+    border:1px solid var(--primary-light);
 }
+
+
+.padding-y {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.margin-x {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.padding-x {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+

@@ -5,13 +5,13 @@
             <img src="img/edit.svg" alt="Edit">
         </div>
     </div>
-    <div class="margin-x" id="editing-section">
+    <div class="margin-x padding-y" id="editing-section">
         <div id="description">
             <h3>Description</h3>
-            <div class="text-box editable-box" id="description-text" contenteditable="true" data-placeholder="Enter a description of the item"></div>
+            <div class="text-box editable-box" id="edit-description-text" contenteditable="true" data-placeholder="Enter a description of the item"></div>
         </div>
 
-        <div class="row">
+        <div class="row padding-y">
             <div class="col-3">
                 <h3>State</h3>
                 <select class="editable-box form-select" id="state-select">
@@ -24,6 +24,10 @@
             <div class="col-3">
                 <h3>Price</h3>
                 <div class="text-box editable-box live-item" id="item-price" contenteditable="true" data-placeholder="Enter item price"></div>
+            </div>
+            <div class="col-3">
+                <h3>Quantity</h3>
+                <div class="text-box editable-box" id="item-quantity" contenteditable="true" data-placeholder="Enter quantity of items"></div>
             </div>
         </div>
     </div>
