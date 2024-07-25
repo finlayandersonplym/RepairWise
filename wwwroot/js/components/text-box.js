@@ -1,9 +1,9 @@
 import { updateInput } from "../localstorage-utils.js";
 
-export function initializeEditableBox(element, updateProperty) {
-    const targetElement = `#${element}`;
+export function initializeEditableBox(element, updateProperty, containerElement) {
+    const selector = `${element}`;
 
-    $(targetElement).on("input", (event) => {
-        updateInput(event, updateProperty)
+    $(selector).on("input", (event) => {
+        updateInput(event, updateProperty, containerElement)
     });
 }

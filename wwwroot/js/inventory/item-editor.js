@@ -13,7 +13,7 @@ export function populateTable() {
 
         items.forEach(item => {
             const row = `<tr class="interactive-row" data-id="${item.id}">
-                <td scope="row"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                <td scope="row"><input class="form-check-input" type="checkbox" value="" id="${item.id}"></td>
                 <td class="table-item-name">${item.name}</td>
                 <td class="table-item-price">${item.price}</td>
             </tr>`;
@@ -41,36 +41,30 @@ export function openExistingItem(itemId) {
     });
 }
 
+// createNewItem.js
+
 export function createNewItem() {
     console.log("Loading: add-item.html");
 
     $("#selection-loader").load("pages/inventory/new-item.html", () => {
-        const skeleton = { id: "", name: "Unnamed Item", description: "", state: "", price: ""};
+        const skeleton = { id: "", name: "Unnamed Item", description: "", state: "", price: "", quantity: "" };
         const newId = addJsonItem("itemList", skeleton);
 
-        // Add the default text and ID
-        $("#item-name-text")
-            .text("Unnamed Item")
-            .attr("data-id", newId);
+        // Set the data-id on the parent container
+        $("#new-item-section").attr("data-id", newId);
 
-        $("#edit-description-text").attr("data-id", newId);
-
-        $("#state-select").attr("data-id", newId);
-
-        $("#item-price").attr("data-id", newId);
-
-        initializeEditableText("item-name", "name");
-        initializeEditableBox("edit-description-text", "description");
-        initializeSelect("state-select", "state");
-        initializeEditableBox("item-price", "price");
+        // Initialize fields with editable properties
+        initializeEditableText("#item-name-text", "name", "#new-item-section", "Unnamed Item");
+        initializeEditableBox("#edit-description-text", "description", "#new-item-section");
+        initializeSelect("#state-select", "state", "#new-item-section");
+        initializeEditableBox("#item-price", "price", "#new-item-section");
+        initializeEditableBox("#item-quantity", "quantity", "#new-item-section");
 
         // Update the table with the new item
         populateTable();
 
-        // If a value which is visible in the table is edited, refresh the table
-        $(".live-item").on("input", function () {
-            populateTable();
-        });
+        // Refresh the table when any live-item input changes
+        $(".live-item").on("input", populateTable);
     });
 }
 

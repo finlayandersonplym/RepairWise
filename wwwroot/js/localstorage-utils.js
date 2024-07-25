@@ -69,10 +69,11 @@ export function updateJsonItemProperty(key, updateProperty, updateValue, matchPr
  *
  * @param {Event} event - The input event triggered on the contenteditable element.
  * @param {string} updateProperty - The property to be updated with the new value.
+ * @param {string} containerElement - The selector for the parent container that holds the data-id.
  */
-export function updateInput(event, updateProperty) {
+export function updateInput(event, updateProperty, containerElement) {
     const element = $(event.currentTarget);
-    let elementId = element.attr("data-id");
+    const elementId = element.closest(containerElement).attr("data-id");
 
     // Determine the new value based on the element type
     let newValue;

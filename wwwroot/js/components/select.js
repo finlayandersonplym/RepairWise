@@ -1,9 +1,9 @@
 import { updateInput } from "../localstorage-utils.js";
 
-export function initializeSelect(element, updateProperty) {
-    const targetElement = `#${element}`;
+export function initializeSelect(element, updateProperty, containerElement) {
+    const selector = `${element}`;
 
-    $(targetElement).on("change", (event) => {
-        updateInput(event, updateProperty)
+    $(selector).on("change", (event) => {
+        updateInput(event, updateProperty, containerElement)
     });
 }
