@@ -1,3 +1,5 @@
+import { populateTable } from "./inventory/item-editor.js";
+
 // Adding custom listeners for logging
 
 const originalSetItem = localStorage.setItem.bind(localStorage);
@@ -19,6 +21,7 @@ localStorage.removeItem = function (key) {
  *
  * @param {string} key - The key under which the list is stored in localStorage.
  * @param {any} value - The value to be added to the list.
+ * @returns {number} - The ID assigned to the added item.
  */
 
 export function addJsonItem(key, value) {
@@ -68,8 +71,41 @@ export function updateJsonItemProperty(key, updateProperty, updateValue, matchPr
  * @param {string} updateProperty - The property to be updated with the new value.
  */
 export function updateInput(event, updateProperty) {
-    const textElement = $(event.currentTarget);
-    let elementId = textElement.attr("data-id");
+    const element = $(event.currentTarget);
+    let elementId = element.attr("data-id");
 
-    updateJsonItemProperty("itemList", updateProperty, textElement.text(), "id", elementId);
+    // Determine the new value based on the element type
+    let newValue;
+    if (element.is("select")) {
+        newValue = element.val(); 
+    } else {
+        newValue = element.text().trim();
+    }
+
+    updateJsonItemProperty("itemList", updateProperty, newValue, "id", elementId);
+}
+
+/**
+* Retrieves a list of items stored in localStorage under the given key.
+*
+* @param {string} storageKey - The key under which the list of items is stored in localStorage.
+* @returns {Array} - The array of items retrieved from localStorage. Returns an empty array if no items are found.
+*/
+export function getJsonItems(storageKey) {
+    const items = JSON.parse(localStorage.getItem(storageKey)) || [];
+    return items;
+}
+
+
+/**
+ * Retrieves a single item from a list stored in localStorage by matching a specific property and value.
+ *
+ * @param {string} key - The key under which the list of items is stored in localStorage.
+ * @param {string} matchProperty - The property name to match against in the items.
+ * @param {any} matchValue - The value to match for the specified property.
+ * @returns {Object|null} - The first item that matches the criteria, or null if no match is found.
+ */
+export function getJsonItem(key, matchProperty, matchValue) {
+    const items = JSON.parse(localStorage.getItem(key)) || [];
+    return items.find(item => item[matchProperty] == matchValue) || null;
 }

@@ -28,24 +28,22 @@ export function initializeEditableText(element, updateProperty) {
         textElement.on("paste", (event) => {
             event.preventDefault();
             let clipboardData = (event.originalEvent || event).clipboardData;
-            let pastedData = clipboardData.getData('text/plain');
+            let pastedData = clipboardData.getData("text/plain");
             // Strip HTML tags using a temporary div
-            let cleanedData = $('<div>').text(pastedData).html();
-            document.execCommand('insertText', false, cleanedData);
+            let cleanedData = $("<div>").text(pastedData).html();
+            document.execCommand("insertText", false, cleanedData);
         });
 
         // On blur make sure to add styling
-        textElement.on('blur', (event) => {
-            $(event.currentTarget).attr('contenteditable', 'false').removeClass('active-editable');
-            $(event.currentTarget).removeClass('editable-text').addClass('edited-text');
+        textElement.on("blur", (event) => {
+            $(event.currentTarget).attr("contenteditable", "false").removeClass("active-editable");
+            $(event.currentTarget).removeClass("editable-text").addClass("edited-text");
 
             // Unbind blur event to avoid multiple bindings
-            textElement.off('blur');
+            textElement.off("blur");
         });
 
         // Update localStorage value on input
         textElement.on("input", (event) => updateInput(event, updateProperty));
-
-
     });
 }

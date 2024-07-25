@@ -14,7 +14,3 @@
 .text-box:focus::placeholder {
     color: transparent;
 }
-
-.text-box:focus {
-    outline-color: var(--primary-light);
-}

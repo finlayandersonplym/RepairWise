@@ -31,28 +31,21 @@ body {
     color: var(--editable-text);
 }
 
-.editable-text {
-    color: var(--editable-text);
-}
-
-.editable-text:hover {
-    color: var(--editable-text-hover);
-}
-
-.active-editable {
-    color: var(--text-color);
-    border-radius: 6px;
-    padding: 3px;
-    outline-color: var(--border-color);
-    outline: 0.5px solid;
-}
-
-.edited-text:hover {
-    color: var(--editable-text-hover);
-}
-
 h3 {
     font-size: 18px;
     font-weight: 400;
 }
 
+.editable-box:focus {
+    border: 1px solid var(--primary-light);
+    outline: none;
+    box-shadow: none;
+}
+
+.editable-box:hover {
+    border-color: var(--primary-color-dark);
+}
+
+.editable-box:focus:hover {
+    border: 1px solid var(--primary-light);
+}
