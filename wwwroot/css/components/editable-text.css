@@ -9,9 +9,17 @@
 }
 
 .active-editable {
-    color: var(--text-color);
     border-radius: 6px;
     padding: 3px;
     outline-color: var(--border-color);
     outline: 0.5px solid;
+}
+
+.edited-text {
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.edited-text:hover {
+    color: var(--editable-text-hover);
 }

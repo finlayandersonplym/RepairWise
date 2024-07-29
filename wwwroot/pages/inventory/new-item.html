@@ -1,34 +1,18 @@
 ﻿<div id="new-item-section">
     <div class="border-style" id="item-name-header">
         <div class="margin-x" id="item-name">
-            <div spellcheck="false" class="editable-text live-item" id="item-name-text"></div>
+            <div spellcheck="false" id="item-name-section">
+                <!-- This will be dynamically filled  wit the editable text-->
+            </div>
         </div>
     </div>
-    <div class="margin-x padding-y" id="editing-section">
-        <div id="description">
-            <h3>Description</h3>
-            <div class="text-box editable-box" id="edit-description-text" contenteditable="true" data-placeholder="Enter a description of the item"></div>
+    <div class="margin-x padding-y">
+        <div id="edit-description-section">
+            <!-- This will be filled with a description text box dynamically -->
         </div>
 
-        <div class="row padding-y">
-            <div class="col-4">
-                <h3>State</h3>
-                <select class="editable-box form-select" id="state-select">
-                    <option style="display: none" value="" selected>Current State of Item</option>
-                    <option value="Serviced">Serviced</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Pending Inspection">Pending Inspection</option>
-                </select>
-            </div>
-            <div class="col-4">
-                <h3>Price</h3>
-                <div class="text-box editable-box live-item" id="item-price" contenteditable="true" data-placeholder="Enter item price"></div>
-            </div>
-            <div class="col-4">
-                <h3>Quantity</h3>
-                <div class="text-box editable-box" id="item-quantity" contenteditable="true" data-placeholder="Enter quantity of items"></div>
-            </div>
+        <div class="d-flex flex-wrap gap-2 padding-y" id="item-edit-section">
+            <!-- Here we will fill the flex grid with elements -->
         </div>
     </div>
 </div>
-

@@ -1,15 +1,28 @@
-﻿.interactive-row {
+﻿.table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+}
+
+.table td {
+    max-width: 100px;
     cursor: pointer;
 }
 
-.table-item-price {
-   text-align:right; 
-   padding-right: 50px;
+.table th:first-child,
+.table td:first-child {
+    max-width: 40px;
 }
 
-.table-item-name {
+.table-item-price {
+    text-align: right;
+}
+
+.table-item {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    max-width: 150px;
 }

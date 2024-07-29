@@ -1,8 +1,6 @@
 import { addJsonItem, getJsonItem, getJsonItems } from "../localstorage-utils.js";
-import { initializeEditableText } from "../components/editable-text.js";
-import { initializeEditableBox } from "../components/text-box.js";
-import { initializeSelect } from "../components/select.js";
-
+import { toggleFieldsBasedOnState } from "./state-options.js";
+import { ComponentFactory }  from "../componentFactory.js";
 export function populateTable() {
     console.log("Loading: item-table.html");
 
@@ -13,16 +11,18 @@ export function populateTable() {
 
         items.forEach(item => {
             const row = `<tr class="interactive-row" data-id="${item.id}">
-                <td scope="row"><input class="form-check-input" type="checkbox" value="" id="${item.id}"></td>
-                <td class="table-item-name">${item.name}</td>
-                <td class="table-item-price">${item.price}</td>
+                <td><input class="form-check-input" type="checkbox" value="" id="${item.id}"></td>
+                <td class="table-item table-item">${item.name}</td>
+                <td class="table-item">&pound${item.price}</td>
             </tr>`;
             tableBody.append(row);
         });
 
-        $(".interactive-row").click(function () {
-            const itemId = $(this).data('id');
-            openExistingItem(itemId);
+        $(".interactive-row").click(function (event) {
+            if (event.target.type !== 'checkbox') { // Check if the click was not on a checkbox
+                const itemId = $(this).data('id');
+                openExistingItem(itemId);
+            }
         });
     });
 }
@@ -47,18 +47,25 @@ export function createNewItem() {
     console.log("Loading: add-item.html");
 
     $("#selection-loader").load("pages/inventory/new-item.html", () => {
-        const skeleton = { id: "", name: "Unnamed Item", description: "", state: "", price: "", quantity: "" };
+        const skeleton = { id: "", name: "Unnamed Item", description: "", state: "", price: "0.00", quantity: "", brand: ""};
         const newId = addJsonItem("itemList", skeleton);
 
-        // Set the data-id on the parent container
-        $("#new-item-section").attr("data-id", newId);
+        const componentFactory = new ComponentFactory("#new-item-section", newId);
 
-        // Initialize fields with editable properties
-        initializeEditableText("#item-name-text", "name", "#new-item-section", "Unnamed Item");
-        initializeEditableBox("#edit-description-text", "description", "#new-item-section");
-        initializeSelect("#state-select", "state", "#new-item-section");
-        initializeEditableBox("#item-price", "price", "#new-item-section");
-        initializeEditableBox("#item-quantity", "quantity", "#new-item-section");
+        // Initialize all essential fields with editable properties
+        componentFactory.createEditableText("#item-name-text", "name", "#item-name-section", "Unnamed Item");
+        componentFactory.createEditableBox("#edit-description-text", "description", "#edit-description-section");
+
+        const stateOptions = ["Serviced", "In Progress", "Pending Inspection"];
+        componentFactory.createSelect("#state-select", "state", "#item-edit-section", stateOptions, "Current State of Item", "edit-gap-sizing");
+
+        componentFactory.createEditableBox("#item-price", "price", "#item-edit-section", "live-item edit-gap-sizing");
+        componentFactory.createEditableBox("#item-quantity", "quantity", "#item-edit-section", "edit-gap-sizing");
+        componentFactory.createEditableBox("#item-brand", "brand", "#item-edit-section", "edit-gap-sizing");
+
+
+        // Dynamically loading fields based on the state
+        toggleFieldsBasedOnState("#state-select");
 
         // Update the table with the new item
         populateTable();
