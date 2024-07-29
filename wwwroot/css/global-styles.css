@@ -4,7 +4,6 @@ body {
     background-color: var(--background-color);
 }
 
-
 /* Utility Classes */
 .bg-blue-dark {
     background-color: var(--primary-dark);

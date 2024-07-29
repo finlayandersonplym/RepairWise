@@ -121,3 +121,89 @@ export function getJsonItem(key, matchProperty, matchValue) {
     const items = JSON.parse(localStorage.getItem(key)) || [];
     return items.find(item => item[matchProperty] == matchValue) || null;
 }
+
+/**
+ * Exports all data from localStorage as a JSON file.
+ *
+ * @param {string} fileName - The name of the file to be downloaded.
+ */
+export function exportLocalStorageToFile() {
+
+    // Collect all data from localStorage
+    const localStorageData = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        try {
+            // Attempt to parse the value as JSON if possible
+            value = JSON.parse(value);
+        } catch (e) {
+            // If parsing fails keep the value as is (likely a string)
+        }
+        localStorageData[key] = value;
+    }
+
+    // Convert the collected data to a JSON string
+    const data = JSON.stringify(localStorageData, null, 2);
+
+    // Create a Blob with the JSON data
+    const blob = new Blob([data], { type: 'application/json' });
+
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+
+    // Create an anchor element and set its href to the Blob URL
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'localStorageData.json';
+
+    // Append the anchor to the document, trigger a click, then remove it
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+/**
+ * Imports JSON data into localStorage.
+ *
+ * @param {string} jsonData - The JSON string containing data to import.
+ */
+export function importJsonToLocalStorage(jsonData) {
+    try {
+        // Parse the JSON data
+        const data = JSON.parse(jsonData);
+
+        // Validate that the parsed data is an object
+        if (typeof data !== 'object' || data === null) {
+            console.error("Invalid JSON data provided.");
+            return;
+        }
+
+        // Iterate over each key-value pair and store it in localStorage
+        for (const [key, value] of Object.entries(data)) {
+            // Convert value to JSON string before storing in localStorage
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+
+        console.log("Data successfully imported into localStorage.");
+    } catch (e) {
+        console.error("Failed to import data: ", e);
+    }
+}
+
+/**
+* Reads a JSON file and imports its content into localStorage.
+*
+* @param {File} file - The JSON file to be read and imported.
+*/
+export function importJsonFileToLocalStorage(file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const jsonData = event.target.result;
+        importJsonToLocalStorage(jsonData);
+    };
+    reader.onerror = (event) => {
+        console.error("Failed to read file: ", event.target.error);
+    };
+    reader.readAsText(file);
+}

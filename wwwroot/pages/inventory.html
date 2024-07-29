@@ -8,13 +8,24 @@
                     Active Items
                     <i class="bi bi-caret-down-fill blue-light"></i>
                 </div>
+
                 <button type="button" class="btn btn-success" id="add-items-button">
                     <i class="bi bi-plus-circle"></i>
                     New
                 </button>
-                <button type="button" class="btn btn-secondary" id="options-dropdown">
-                    <i style="color:black" class="bi bi-three-dots-vertical"></i>
-                </button>
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary" type="button" id="options-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i style="color:black" class="bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label for="file-input" class="dropdown-item">Import Items</label>
+                            <input type="file" id="file-input" accept=".json" style="display: none;">
+                        </li>
+                        <li><a class="dropdown-item" id="export-items" href="#">Export Items</a></li>
+                    </ul>
+                </div>
             </div>
             <div id="item-table">
             </div>
