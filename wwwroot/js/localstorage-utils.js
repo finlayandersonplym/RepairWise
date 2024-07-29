@@ -71,16 +71,27 @@ export function updateJsonItemProperty(key, updateProperty, updateValue, matchPr
  * @param {string} updateProperty - The property to be updated with the new value.
  * @param {string} containerElement - The selector for the parent container that holds the data-id.
  */
-export function updateInput(event, updateProperty, containerElement) {
+export function updateInput(event, updateProperty, containerElement, inputType) {
     const element = $(event.currentTarget);
     const elementId = element.closest(containerElement).attr("data-id");
 
-    // Determine the new value based on the element type
-    let newValue;
-    if (element.is("select")) {
-        newValue = element.val(); 
-    } else {
-        newValue = element.text().trim();
+    let newValue = element.text().trim();
+
+    // Keep in mind that JSON doesn't have integers or floats just number
+    switch (inputType) {
+        case "integer":
+            newValue = parseInt(newValue, 10);
+            break;
+        case "float":
+            newValue = parseFloat(newValue);
+            break;
+        case "string":
+            newValue = String(newValue);
+            break;
+    }
+
+    if (isNaN(newValue) && (inputType === "integer" || inputType === "float")) {
+        newValue = null; // Handle invalid numbers gracefully
     }
 
     updateJsonItemProperty("itemList", updateProperty, newValue, "id", elementId);

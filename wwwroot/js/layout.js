@@ -1,3 +1,4 @@
+import { initializeInventoryPage } from "./inventory/inventory.js";
 
 function activePage() {
     $(".nav-link").on("click", function (event) {
@@ -7,13 +8,19 @@ function activePage() {
 
         let page = $(this).data("page");
 
-        console.log("Loading: " + page + ".html")
+        console.log("Loading: " + page + ".html");
 
-        $("#page-content").load("pages/" + page + ".html");
+        $("#page-content").load("pages/" + page + ".html", function () {
+            if (page === 'inventory') {
+                initializeInventoryPage();
+            }
+        });
     });
 }
 
 $(document).ready(function () {
-    $("#page-content").load("pages/inventory.html");
+    $("#page-content").load("pages/inventory.html", function () {
+        initializeInventoryPage();
+    });
     activePage();
 });

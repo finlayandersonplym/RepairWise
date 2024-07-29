@@ -13,7 +13,7 @@ export function populateTable() {
             const row = `<tr class="interactive-row" data-id="${item.id}">
                 <td><input class="form-check-input" type="checkbox" value="" id="${item.id}"></td>
                 <td class="table-item table-item">${item.name}</td>
-                <td class="table-item">&pound${item.price}</td>
+                <td class="table-item">&pound${item.selling_price}</td>
             </tr>`;
             tableBody.append(row);
         });
@@ -33,11 +33,20 @@ export function openExistingItem(itemId) {
 
         const item = getJsonItem("itemList", "id", itemId);
 
-        $("#item-name-text").text(`${item.name}`);
+        const componentFactory = new ComponentFactory();
 
-        $("#item-description-text").text(`${item.description}`);
+        componentFactory.addFieldToElement("#item-name", "name", "#item-name-header", item, false, "padding-x padding-y");
 
-        $("#item-price").text(`${item.price}`);
+        componentFactory.addFieldToElement("#item-description-text", "description", "#item-description-text", item, false);
+
+        componentFactory.addFieldToElement("#item-price", "selling_price", "#item-properties-section", item);
+        componentFactory.addFieldToElement("#item-cost-price", "cost_price", "#item-properties-section", item);
+        componentFactory.addFieldToElement("#item-repair-price", "repair_price", "#item-properties-section", item);
+        componentFactory.addFieldToElement("#item-quantity", "quantity", "#item-properties-section", item);
+        componentFactory.addFieldToElement("#item-brand", "brand", "#item-properties-section", item);
+        componentFactory.addFieldToElement("#item-weight", "weight", "#item-properties-section", item);
+        componentFactory.addFieldToElement("#item-dimensions", "dimensions", "#item-properties-section", item);
+        componentFactory.addFieldToElement("#item-state", "state", "#item-properties-section", item);
     });
 }
 
@@ -47,7 +56,19 @@ export function createNewItem() {
     console.log("Loading: add-item.html");
 
     $("#selection-loader").load("pages/inventory/new-item.html", () => {
-        const skeleton = { id: "", name: "Unnamed Item", description: "", state: "", price: "0.00", quantity: "", brand: ""};
+        const skeleton = {
+            id: "",
+            name: "Unnamed Item",
+            description: "",
+            state: "",
+            selling_price: 0,
+            cost_price: 0,
+            repair_price: 0,
+            quantity: 0,
+            brand: "",
+            weight: 0,
+            dimensions: "",
+        };
         const newId = addJsonItem("itemList", skeleton);
 
         const componentFactory = new ComponentFactory("#new-item-section", newId);
@@ -59,9 +80,13 @@ export function createNewItem() {
         const stateOptions = ["Serviced", "In Progress", "Pending Inspection"];
         componentFactory.createSelect("#state-select", "state", "#item-edit-section", stateOptions, "Current State of Item", "edit-gap-sizing");
 
-        componentFactory.createEditableBox("#item-price", "price", "#item-edit-section", "live-item edit-gap-sizing");
-        componentFactory.createEditableBox("#item-quantity", "quantity", "#item-edit-section", "edit-gap-sizing");
-        componentFactory.createEditableBox("#item-brand", "brand", "#item-edit-section", "edit-gap-sizing");
+        componentFactory.createEditableBox("#item-selling-price", "selling_price", "#item-edit-section", "live-item edit-gap-sizing", "float");
+        componentFactory.createEditableBox("#item-quantity", "quantity", "#item-edit-section", "edit-gap-sizing", "integer");
+        componentFactory.createEditableBox("#item-brand", "brand", "#item-edit-section", "edit-gap-sizing", "string");
+        componentFactory.createEditableBox("#item-cost-price", "cost_price", "#item-edit-section", "edit-gap-sizing", "float");
+        componentFactory.createEditableBox("#item-repair-price", "repair_price", "#item-edit-section", "edit-gap-sizing", "float");
+        componentFactory.createEditableBox("#item-weight", "weight", "#item-edit-section", "edit-gap-sizing", "float");
+        componentFactory.createEditableBox("#item-dimensions", "dimensions", "#item-edit-section", "edit-gap-sizing", "string");
 
 
         // Dynamically loading fields based on the state
