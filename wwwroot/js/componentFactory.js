@@ -1,17 +1,17 @@
 import { updateInput } from "./localstorage-utils.js"
-
+import { editExistingItem } from "./inventory/item-editor.js";
 export class ComponentFactory {
     constructor(containerElement, id) {
         this.containerSelector = $(`${containerElement}`);
         this.containerSelector.attr("data-id", id);
+        this.itemId = id;
     }
 
-    addFieldToElement(element, property, parentElement, item, withLabel = true, additionalClasses = "") {
+    addFieldToElement(elementId, property, parentElement, item, withLabel = true, additionalClasses = "") {
 
         // Remove any leading # from the element string
-        const cleanElementId = element.replace(/^#/, '');
+        const cleanElementId = elementId.replace(/^#/, '');
 
-        console.log(item[property]);
         // Convert updateProperty for display
         const displayProperty = this.formatDisplayProperty(property);
 
@@ -25,10 +25,10 @@ export class ComponentFactory {
         $(parentElement).append(newFieldHTML);
     }
 
-    createEditableBox(element, updateProperty, parentElement, additionalClasses = "", inputType) {
+    createEditableBox(elementId, updateProperty, parentElement, additionalClasses = "", inputType, defaultText="") {
 
         // Remove any leading # from the element string
-        const cleanElementId = element.replace(/^#/, '');
+        const cleanElementId = elementId.replace(/^#/, '');
 
         // Convert updateProperty for display
         const displayProperty = this.formatDisplayProperty(updateProperty);
@@ -37,20 +37,20 @@ export class ComponentFactory {
         const newTextBoxHTML = `
         <div class="flex-fill ${additionalClasses}">
             <h3>${displayProperty}</h3>
-            <div class="text-box editable-box" id="${cleanElementId}" contenteditable="true" data-placeholder="Enter ${displayProperty}"></div>
+            <div class="text-box editable-box" id="${cleanElementId}" contenteditable="true" data-placeholder="Enter ${displayProperty}">${defaultText}</div>
         </div>
         `;
 
         $(parentElement).append(newTextBoxHTML);
 
 
-        const $elementSelector = $(element);
+        const $elementSelector = $(elementId);
 
         $elementSelector.on("input", (event) => updateInput(event, updateProperty, this.containerSelector, inputType));
     }
 
-    createEditableText(element, updateProperty, parentElement, defaultText, additionalClasses = "") {
-        const cleanElementId = element.replace(/^#/, '');
+    createEditableText(elementId, updateProperty, parentElement, defaultText, additionalClasses = "") {
+        const cleanElementId = elementId.replace(/^#/, '');
 
         // Create the new HTML content for the editable text element
         const newEditableTextHTML = `
@@ -61,7 +61,7 @@ export class ComponentFactory {
 
         $(parentElement).append(newEditableTextHTML);
 
-        const $elementSelector = $(element);
+        const $elementSelector = $(elementId);
 
         // Attach event listeners
         $elementSelector.on("input", (event) => updateInput(event, updateProperty, this.containerSelector));
@@ -71,12 +71,12 @@ export class ComponentFactory {
         $elementSelector.on("blur", this.handleBlur);
     }
 
-    createSelect(element, updateProperty, ancestorElement, options, placeholder = "Select an option", additionalClasses = "") {
+    createSelect(elementId, updateProperty, parentElement, options, placeholder = "Select an option", additionalClasses = "") {
         // Generate options HTML
         const optionsHTML = options.map(option => `<option value="${option}">${option}</option>`).join('');
 
         // Remove any leading # from the element string
-        const cleanElementId = element.replace(/^#/, '');
+        const cleanElementId = elementId.replace(/^#/, '');
 
         // Create the new HTML content for the select element
         const newSelectHTML = `
@@ -87,13 +87,34 @@ export class ComponentFactory {
                     ${optionsHTML}
                 </select>
             </div>
-        `;
-        $(ancestorElement).append(newSelectHTML);
+        `; 
+        $(parentElement).append(newSelectHTML);
 
-        const $elementSelector = $(element);
+        const $elementSelector = $(elementId);
 
         // Attach event listener
-        $elementSelector.on("change", (event) => updateInput(event, updateProperty, this.containerSelector));
+        $elementSelector.on("click", (event) => updateInput(event, updateProperty, this.containerSelector));
+    }
+
+    createEditButton(elementId, parentElement, additionalClasses = "") {
+        // Remove any leading # from the element string
+        const cleanElementId = elementId.replace(/^#/, '');
+
+        // Create the HTML for the edit button
+        const editButtonHTML = `
+            <button id="${cleanElementId}" class="edit-button ${additionalClasses}">
+                Edit
+            </button>
+        `;
+
+        // Append the button to the parent element
+        $(parentElement).append(editButtonHTML);
+
+        const $elementSelector = $(elementId);
+
+        console.log(this.itemId);
+        // Attach click event listener
+        $elementSelector.on("click", () => editExistingItem(this.itemId));
     }
 
     formatDisplayProperty(property) {
@@ -103,6 +124,7 @@ export class ComponentFactory {
             .map(word => this.capitalizeFirstLetter(word))
             .join(' ');
     }
+
 
     handleEditableTextClick(event) {
         const $element = $(event.currentTarget);

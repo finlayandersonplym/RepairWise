@@ -1,12 +1,20 @@
 ﻿<link href="css/inventory.css" rel="stylesheet">
-
 <div id="inventory" class="container-fluid p-0">
     <div class="row h-100 g-0">
         <div id="item-selector" class="border-style">
             <div id="item-management" class="border-style">
-                <div id="item-select-dropdown" role="button">
-                    Active Items
-                    <i class="bi bi-caret-down-fill blue-light"></i>
+                <div class="dropdown col-7">
+                    <div id="item-select-dropdown" role="button" data-bs-toggle="dropdown">
+                        <span id="item-filter-text">Serviced</span>
+                        <i class="bi bi-caret-down-fill blue-light"></i>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item filter-option" data-filter="Serviced">Serviced</a></li>
+                        <li><a class="dropdown-item filter-option" data-filter="In Progress">In Progress</a></li>
+                        <li><a class="dropdown-item filter-option" data-filter="Pending Inspection">Pending Inspection</a></li>
+                        <li><a class="dropdown-item filter-option" data-filter="Completed">Completed</a></li>
+                        <li><a class="dropdown-item filter-option" data-filter="Completed">Unknown</a></li>
+                    </ul>
                 </div>
 
                 <button type="button" class="btn btn-success" id="add-items-button">
@@ -15,7 +23,7 @@
                 </button>
 
                 <div class="dropdown">
-                    <button class="btn btn-secondary" type="button" id="options-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-secondary" type="button" id="options-dropdown" data-bs-toggle="dropdown">
                         <i style="color:black" class="bi-three-dots-vertical"></i>
                     </button>
                     <ul class="dropdown-menu">
@@ -23,7 +31,7 @@
                             <label for="file-input" class="dropdown-item">Import Items</label>
                             <input type="file" id="file-input" accept=".json" style="display: none;">
                         </li>
-                        <li><a class="dropdown-item" id="export-items" href="#">Export Items</a></li>
+                        <li><a class="dropdown-item" id="export-items">Export Items</a></li>
                     </ul>
                 </div>
             </div>

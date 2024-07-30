@@ -1,4 +1,4 @@
-
+/*
 export function toggleFieldsBasedOnState(element, updateProperty, containerElement) {
     const selector = `${element}`;
 
@@ -17,4 +17,4 @@ export function toggleFieldsBasedOnState(element, updateProperty, containerEleme
 
 function openServicedFields() {
 
-}
+}*/

@@ -1,4 +1,4 @@
-import { populateTable } from "./inventory/item-editor.js";
+import { populateTable } from "./inventory/table.js";
 
 // Adding custom listeners for logging
 
@@ -75,7 +75,13 @@ export function updateInput(event, updateProperty, containerElement, inputType) 
     const element = $(event.currentTarget);
     const elementId = element.closest(containerElement).attr("data-id");
 
-    let newValue = element.text().trim();
+    let newValue;
+    if (element.is("select")) {
+        newValue = element.val();
+    } else {
+        newValue = element.text().trim();
+    }
+
 
     // Keep in mind that JSON doesn't have integers or floats just number
     switch (inputType) {
