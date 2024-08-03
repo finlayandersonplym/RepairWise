@@ -39,6 +39,6 @@ export function tableFilter() {
 
         // Update the dropdown text
         $("#item-filter-text").text(selectedItemText);
-        populateTable()
+        populateTable();
     });
 }

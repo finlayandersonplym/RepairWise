@@ -1,4 +1,4 @@
-import { createNewItem } from "./item-editor.js";
+import { loadItemEditor } from "./item-editor.js";
 import { exportLocalStorageToFile, importJsonFileToLocalStorage } from "../localstorage-utils.js";
 import { populateTable, tableFilter } from "./table.js";
 
@@ -6,7 +6,7 @@ export function initializeInventoryPage() {
     tableFilter();
     populateTable();
     $("#add-items-button").click(() => {
-        createNewItem();
+        loadItemEditor();
     });
     $("#export-items").click(() => {
         exportLocalStorageToFile();

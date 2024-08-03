@@ -1,68 +1,177 @@
 import { addJsonItem, getJsonItem } from "../localstorage-utils.js";
-import { ComponentFactory }  from "../componentFactory.js";
+import { ComponentFactory }  from "../components/componentFactory.js";
 import { populateTable } from "./table.js";
 export function openExistingItem(itemId) {
     $("#selection-loader").load("pages/inventory/existing-item.html", () => {
-
         const item = getJsonItem("itemList", "id", itemId);
 
-        const componentFactory = new ComponentFactory("", itemId);
+        const componentFactory = new ComponentFactory(itemId);
 
-        componentFactory.addFieldToElement("#item-name", "name", "#item-name-header", item, false, "padding-x padding-y");
+        componentFactory.addTextField({
+            elementId: "#item-name",
+            property: "name",
+            parentElement: "#item-name-header",
+            item: item,
+            withLabel: false,
+            additionalClasses: "padding-x padding-y"
+        });
 
-        componentFactory.addFieldToElement("#item-description-text", "description", "#item-description-text", item, false);
+        componentFactory.addTextField({
+            elementId: "#item-description-text",
+            property: "description",
+            parentElement: "#item-description-text",
+            item: item,
+            withLabel: false
+        });
 
-        componentFactory.addFieldToElement("#item-price", "selling_price", "#item-properties-section", item);
-        componentFactory.addFieldToElement("#item-cost-price", "cost_price", "#item-properties-section", item);
-        componentFactory.addFieldToElement("#item-repair-price", "repair_price", "#item-properties-section", item);
-        componentFactory.addFieldToElement("#item-quantity", "quantity", "#item-properties-section", item);
-        componentFactory.addFieldToElement("#item-brand", "brand", "#item-properties-section", item);
-        componentFactory.addFieldToElement("#item-weight", "weight", "#item-properties-section", item);
-        componentFactory.addFieldToElement("#item-dimensions", "dimensions", "#item-properties-section", item);
-        componentFactory.addFieldToElement("#item-state", "state", "#item-properties-section", item);
+        const properties = [
+            { elementId: "#item-price", property: "selling_price" },
+            { elementId: "#item-cost-price", property: "cost_price" },
+            { elementId: "#item-repair-price", property: "repair_price" },
+            { elementId: "#item-quantity", property: "quantity" },
+            { elementId: "#item-brand", property: "brand" },
+            { elementId: "#item-weight", property: "weight" },
+            { elementId: "#item-dimensions", property: "dimensions" },
+            { elementId: "#item-state", property: "state" }
+        ];
 
-        componentFactory.createEditButton("#item-edit-button", "#item-properties-section", "btn btn-primary")
+        properties.forEach(({ elementId, property }) => {
+            componentFactory.addTextField({
+                elementId,
+                property,
+                parentElement: "#item-properties-section",
+                item: item
+            });
+        });
+
+        componentFactory.createEditItemButton({
+            elementId: "#item-edit-button",
+            parentElement: "#item-properties-section",
+            additionalClasses: "btn btn-primary"
+        });
     });
 }
 
-export function createNewItem() {
-    console.log("Loading: add-item.html");
+export function loadItemEditor(itemId = null) {
+    console.log("Loading: item-editor.html");
 
     $("#selection-loader").load("pages/inventory/item-editor.html", () => {
-        const skeleton = {
-            id: "",
-            name: "Unnamed Item",
-            description: "",
-            state: "Unknown",
-            selling_price: 0,
-            cost_price: 0,
-            repair_price: 0,
-            quantity: 0,
-            brand: "",
-            weight: 0,
-            dimensions: "",
-        };
-        const newId = addJsonItem("itemList", skeleton);
+        let item, newId;
+        if (itemId) {
+            // Editing existing item
+            item = getJsonItem("itemList", "id", itemId);
+            newId = itemId;
+        } else {
+            // Creating new item
+            item = {
+                id: "",
+                name: "Unnamed Item",
+                description: "",
+                state: "Unknown",
+                selling_price: 0,
+                cost_price: 0,
+                repair_price: 0,
+                quantity: 0,
+                brand: "",
+                weight: 0,
+                dimensions: "",
+            };
+            newId = addJsonItem("itemList", item);
+        }
 
-        const componentFactory = new ComponentFactory("#new-item-section", newId);
+        const componentFactory = new ComponentFactory(newId);
 
         // Initialize all essential fields with editable properties
-        componentFactory.createEditableText("#item-name-text", "name", "#item-name-section", "Unnamed Item");
-        componentFactory.createEditableBox("#edit-description-text", "description", "#edit-description-section");
+        componentFactory.createLiveEditableText({
+            elementId: "#item-name-text",
+            updateProperty: "name",
+            parentElement: "#item-name-section",
+            defaultText: item.name,
+            additionalClasses: "live-item",
+        });
+
+        componentFactory.createTextBox({
+            elementId: "#edit-description-text",
+            updateProperty: "description",
+            parentElement: "#edit-description-section",
+            defaultText: item.description,
+        });
 
         const stateOptions = ["Serviced", "In Progress", "Pending Inspection", "Completed", "Unknown"];
-        componentFactory.createSelect("#state-select", "state", "#item-edit-section", stateOptions, "Current State of Item", "live-item edit-gap-sizing");
+        componentFactory.createSelect({
+            elementId: "#state-select",
+            updateProperty: "state",
+            parentElement: "#item-edit-section",
+            options: stateOptions,
+            defaultValue: item.state,
+            additionalClasses: "live-item edit-gap-sizing",
+        });
 
-        componentFactory.createEditableBox("#item-selling-price", "selling_price", "#item-edit-section", "live-item edit-gap-sizing", "float");
-        componentFactory.createEditableBox("#item-quantity", "quantity", "#item-edit-section", "edit-gap-sizing", "integer");
-        componentFactory.createEditableBox("#item-brand", "brand", "#item-edit-section", "edit-gap-sizing", "string");
-        componentFactory.createEditableBox("#item-cost-price", "cost_price", "#item-edit-section", "edit-gap-sizing", "float");
-        componentFactory.createEditableBox("#item-repair-price", "repair_price", "#item-edit-section", "edit-gap-sizing", "float");
-        componentFactory.createEditableBox("#item-weight", "weight", "#item-edit-section", "edit-gap-sizing", "float");
-        componentFactory.createEditableBox("#item-dimensions", "dimensions", "#item-edit-section", "edit-gap-sizing", "string");
+        console.log(item.state);
 
+        componentFactory.createTextBox({
+            elementId: "#item-selling-price",
+            updateProperty: "selling_price",
+            parentElement: "#item-edit-section",
+            additionalClasses: "live-item edit-gap-sizing",
+            inputType: "float",
+            defaultText: item.selling_price,
+        });
 
-        // Update the table with the new item
+        componentFactory.createTextBox({
+            elementId: "#item-quantity",
+            updateProperty: "quantity",
+            parentElement: "#item-edit-section",
+            additionalClasses: "edit-gap-sizing",
+            inputType: "integer",
+            defaultText: item.quantity,
+        });
+
+        componentFactory.createTextBox({
+            elementId: "#item-brand",
+            updateProperty: "brand",
+            parentElement: "#item-edit-section",
+            additionalClasses: "edit-gap-sizing",
+            inputType: "string",
+            defaultText: item.brand,
+        });
+
+        componentFactory.createTextBox({
+            elementId: "#item-cost-price",
+            updateProperty: "cost_price",
+            parentElement: "#item-edit-section",
+            additionalClasses: "edit-gap-sizing",
+            inputType: "float",
+            defaultText: item.cost_price,
+        });
+
+        componentFactory.createTextBox({
+            elementId: "#item-repair-price",
+            updateProperty: "repair_price",
+            parentElement: "#item-edit-section",
+            additionalClasses: "edit-gap-sizing",
+            inputType: "float",
+            defaultText: item.repair_price,
+        });
+
+        componentFactory.createTextBox({
+            elementId: "#item-weight",
+            updateProperty: "weight",
+            parentElement: "#item-edit-section",
+            additionalClasses: "edit-gap-sizing",
+            inputType: "float",
+            defaultText: item.weight,
+        });
+
+        componentFactory.createTextBox({
+            elementId: "#item-dimensions",
+            updateProperty: "dimensions",
+            parentElement: "#item-edit-section",
+            additionalClasses: "edit-gap-sizing",
+            inputType: "string",
+            defaultText: item.dimensions,
+        });
+
         populateTable();
 
         // Refresh the table when any live-item input changes
@@ -70,29 +179,5 @@ export function createNewItem() {
     });
 }
 
-export function editExistingItem(itemId) {
-    $("#selection-loader").load("pages/inventory/item-editor.html", () => {
-        const item = getJsonItem("itemList", "id", itemId);
 
-        const componentFactory = new ComponentFactory("#new-item-section", itemId);
 
-        componentFactory.createEditableText("#item-name-text", "name", "#item-name-section", item.name);
-        componentFactory.createEditableBox("#edit-description-text", "description", "#edit-description-section", "", "", item.description);
-
-        const stateOptions = ["Serviced", "In Progress", "Pending Inspection", "Completed", "Unknown"];
-        componentFactory.createSelect("#state-select", "state", "#item-edit-section", stateOptions, item.state, "live-item edit-gap-sizing");
-
-        componentFactory.createEditableBox("#item-selling-price", "selling_price", "#item-edit-section", "live-item edit-gap-sizing", "float", item.selling_price);
-        componentFactory.createEditableBox("#item-quantity", "quantity", "#item-edit-section", "edit-gap-sizing", "integer", item.quantity);
-        componentFactory.createEditableBox("#item-brand", "brand", "#item-edit-section", "edit-gap-sizing", "string", item.brand);
-        componentFactory.createEditableBox("#item-cost-price", "cost_price", "#item-edit-section", "edit-gap-sizing", "float", item.cost_price);
-        componentFactory.createEditableBox("#item-repair-price", "repair_price", "#item-edit-section", "edit-gap-sizing", "float", item.repair_price);
-        componentFactory.createEditableBox("#item-weight", "weight", "#item-edit-section", "edit-gap-sizing", "float", item.weight);
-        componentFactory.createEditableBox("#item-dimensions", "dimensions", "#item-edit-section", "edit-gap-sizing", "string", item.dimensions);
-
-        populateTable();
-
-        // Refresh the table when any live-item input changes
-        $(".live-item").on("input", populateTable)
-    });
-}
