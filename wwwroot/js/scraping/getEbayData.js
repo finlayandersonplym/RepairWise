@@ -15,8 +15,7 @@
  * @returns {Promise<void>} - A promise that resolves when the operation is complete.
  */
 
-export async function fetch_and_extract_ebay_items(searchOptions) {
-
+export async function fetchEbayItems(searchOptions) {
     // This code is important to adhere to Ebay's CORS policy, using the corsproxy https://corsproxy.io/
     const originalUrl = assembleEbayURL(searchOptions);
     const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(originalUrl);
@@ -34,10 +33,13 @@ export async function fetch_and_extract_ebay_items(searchOptions) {
         const doc = parser.parseFromString(htmlText, 'text/html');
 
         // Query for item elements, finds all items on the given page
-        const itemElements = doc.querySelectorAll('.s-item');
+        const itemElements = Array.from(doc.querySelectorAll('.s-item'));
 
-        // Extract name and price for each item
-        itemElements.forEach(item => {
+        // Array to store the extracted items
+        const items = [];
+
+        // Ignore the first two items and extract name and price for each remaining item
+        itemElements.slice(2).forEach(item => {
             const titleElement = item.querySelector('.s-item__title');
             const priceElement = item.querySelector('.s-item__price');
             const conditionElement = item.querySelector('.s-item__subtitle .SECONDARY_INFO');
@@ -45,6 +47,7 @@ export async function fetch_and_extract_ebay_items(searchOptions) {
             const sellerElement = item.querySelector('.s-item__seller-info-text');
             const imageElement = item.querySelector('.s-item__image-wrapper img');
             const linkElement = item.querySelector('.s-item__link');
+            const soldDateElement = item.querySelector('.s-item__caption--signal.POSITIVE span');
 
             // Extract and clean up the data
             const itemName = titleElement ? titleElement.textContent.trim() : 'No title found';
@@ -54,19 +57,29 @@ export async function fetch_and_extract_ebay_items(searchOptions) {
             const itemSeller = sellerElement ? sellerElement.textContent.trim() : 'No seller info';
             const itemImage = imageElement ? imageElement.src : 'No image found';
             const itemLink = linkElement ? linkElement.href : 'No link found';
+            const itemSoldDate = soldDateElement ? soldDateElement.textContent.trim() : null;
 
-            // Log the extracted information
-            console.log(`Name: ${itemName}`);
-            console.log(`Price: ${itemPrice}`);
-            console.log(`Condition: ${itemCondition}`);
-            console.log(`Postage: ${itemPostage}`);
-            console.log(`Seller: ${itemSeller}`);
-            console.log(`Image URL: ${itemImage}`);
-            console.log(`Link: ${itemLink}`);
-            console.log('--------------------------------');
+            // Create an item object and add it to the items array
+            const itemObject = {
+                name: itemName,
+                price: itemPrice,
+                condition: itemCondition,
+                postage: itemPostage,
+                seller: itemSeller,
+                imageUrl: itemImage,
+                link: itemLink,
+                soldDate: itemSoldDate,
+            };
+
+            items.push(itemObject);
         });
+
+        // Return the list of items
+        return items;
+
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
+        return [];  // Return an empty array in case of an error
     }
 }
 
@@ -90,30 +103,24 @@ export async function fetch_and_extract_ebay_items(searchOptions) {
  * @returns {string} - The assembled eBay search URL.
  */
 
-export function assembleEbayURL(searchOptions) {
-    const baseURL = "https://www.ebay.co.uk/sch/i.html?_nkw=";
-    let url = baseURL;
-
-    // Add keywords
-    if (searchOptions.itemKeywords) {
-        url += encodeURIComponent(searchOptions.itemKeywords);
-    }
+function assembleEbayURL(searchOptions) {
+    let url = `https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(searchOptions.itemKeywords)}`;
 
     // Keyword options (mutually exclusive)
     const keywordOptionsMap = {
         "All words, any order": 1,
         "Any words, exact order": 2,
         "Exact words, exact order": 3,
-        "Exact words, any order": 4,
+        "Exact words, any order": 4
     };
-    if (searchOptions.keywordOptions && keywordOptionsMap[searchOptions.keywordOptions]) {
+    if (searchOptions.keywordOptions) {
         url += `&_in_kw=${keywordOptionsMap[searchOptions.keywordOptions]}`;
     }
 
-    // Add common part
-    url += "&_sacat=0";
-
-    // Add completed and sold items (not mutually exclusive)
+    // Non-mutually exclusive options
+    if (searchOptions.titleAndDesc) {
+        url += "&LH_TitleDesc=1";
+    }
     if (searchOptions.completedItems) {
         url += "&LH_Complete=1";
     }
@@ -121,21 +128,25 @@ export function assembleEbayURL(searchOptions) {
         url += "&LH_Sold=1";
     }
 
-    // Add title and description
-    if (searchOptions.titleAndDesc) {
-        url += "&LH_TitleDesc=1";
-    }
-
-    // Buying format options (mutually exclusive)
+    // Buying format (mutually exclusive)
     const buyingFormatMap = {
-        "accepts_offers": "LH_BO=1",
         "auction": "LH_Auction=1",
         "buy_it_now": "LH_BIN=1",
-        "classified_ads": "LH_CAds=1"
+        "classified_ads": "LH_CAds=1",
+        "accepts_offers": "LH_BO=1",
     };
-
-    if (searchOptions.buyingFormat && buyingFormatMap[searchOptions.buyingFormat]) {
+    if (searchOptions.buyingFormat) {
         url += `&${buyingFormatMap[searchOptions.buyingFormat]}`;
+    }
+
+    // Item condition (mutually exclusive)
+    const itemConditionMap = {
+        "New": 3,
+        "Used": 4,
+        "Parts": 7000
+    };
+    if (searchOptions.itemCondition && searchOptions.itemCondition !== "All") {
+        url += `&LH_ItemCondition=${itemConditionMap[searchOptions.itemCondition]}`;
     }
 
     // Sort options (mutually exclusive)
@@ -144,13 +155,15 @@ export function assembleEbayURL(searchOptions) {
         "Time: newly listed": 10,
         "Price + postage: lowest first": 15,
         "Price + postage: highest first": 16,
-        "Price: highest first": 3,
         "Price: lowest first": 2,
-        "Best match": 12,
+        "Price: highest first": 3,
+        "Best match": 12
     };
-    if (searchOptions.sortOptions && sortOptionsMap[searchOptions.sortOptions]) {
+    if (searchOptions.sortOptions) {
         url += `&_sop=${sortOptionsMap[searchOptions.sortOptions]}`;
     }
 
+    url += "&_sacat=0"; // Category is hardcoded to 0 (all categories)
+    console.log(url);
     return url;
 }

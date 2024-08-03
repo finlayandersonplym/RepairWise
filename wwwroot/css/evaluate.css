@@ -1,0 +1,117 @@
+#items-display-section {
+    height: 90vh; 
+    overflow-y: auto;
+    border: 1px solid #ccc; 
+    padding: 10px;
+}
+
+.item-card {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+    background-color: #fff;
+}
+
+
+.item-image img {
+    max-width: 100px;
+    height: auto;
+    object-fit: cover;
+    border-right: 1px solid #ddd;
+}
+
+.item-card {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+
+.item-card:hover {
+    transform: scale(1.01);
+}
+
+.item-details {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.item-title {
+    font-size: 1em; 
+    margin: 0 0 5px; 
+    color: #333;
+    text-decoration: none;
+}
+
+.item-title:hover {
+    text-decoration: underline;
+}
+
+.item-price, .item-condition, .item-postage, .item-seller {
+    margin: 2px 0;
+    color: #555;
+}
+
+.item-link {
+    align-self: flex-start;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.item-link:hover {
+    background-color: #0056b3;
+}
+
+.analytics-card {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.analytics-card h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.analytics-card .analytics-item {
+    margin-bottom: 10px;
+}
+
+.analytics-card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.analytics-card ul.condition-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.analytics-card ul.condition-list li {
+    margin: 5px 0;
+    color: #555;
+}
+
+.analytics-card ul.condition-list li strong {
+    color: #000;
+}
