@@ -19,8 +19,8 @@ function activePage() {
 }
 
 $(document).ready(function () {
-    $("#page-content").load("pages/inventory.html", function () {
-        initializeInventoryPage();
+    $("#page-content").load("pages/evaluate.html", function () {
+        //getData();
     });
     activePage();
 });

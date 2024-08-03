@@ -70,11 +70,6 @@
     color: var(--secondary-dark);
 }
 
-.edit-gap-sizing {
-    width: calc(25% - 0.5rem);
-    max-width: calc(25% - 0.5rem);
-}
-
 .dropdown-item {
     cursor: pointer;
 }

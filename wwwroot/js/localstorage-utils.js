@@ -69,11 +69,11 @@ export function updateJsonItemProperty(key, updateProperty, updateValue, matchPr
  *
  * @param {Event} event - The input event triggered on the contenteditable element.
  * @param {string} updateProperty - The property to be updated with the new value.
- * @param {string} containerElement - The selector for the parent container that holds the data-id.
+ * @param {int} id - The id of the item JSON item to be edited in local storage.
+ * @param {string} inputType - The data type of the input.
  */
-export function updateInput(event, updateProperty, containerElement, inputType) {
-    const element = $(event.currentTarget);
-    const elementId = element.closest(containerElement).attr("data-id");
+export function updateInput(event, updateProperty, id, inputType) {
+    const element = $(event.target); 
 
     let newValue;
     if (element.is("select")) {
@@ -81,7 +81,6 @@ export function updateInput(event, updateProperty, containerElement, inputType) 
     } else {
         newValue = element.text().trim();
     }
-
 
     // Keep in mind that JSON doesn't have integers or floats just number
     switch (inputType) {
@@ -100,7 +99,7 @@ export function updateInput(event, updateProperty, containerElement, inputType) 
         newValue = null; // Handle invalid numbers gracefully
     }
 
-    updateJsonItemProperty("itemList", updateProperty, newValue, "id", elementId);
+    updateJsonItemProperty("itemList", updateProperty, newValue, "id", id);
 }
 
 /**

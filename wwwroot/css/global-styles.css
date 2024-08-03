@@ -55,6 +55,11 @@ h3 {
     padding-bottom: 12px;
 }
 
+.margin-y {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
 .margin-x {
     margin-left: 16px;
     margin-right: 16px;
@@ -64,6 +69,12 @@ h3 {
     padding-left: 16px;
     padding-right: 16px;
 }
+
+.edit-gap-sizing {
+    width: calc(25% - 0.5rem);
+    max-width: calc(25% - 0.5rem);
+}
+
 
 .form-check-input {
     cursor: pointer;
