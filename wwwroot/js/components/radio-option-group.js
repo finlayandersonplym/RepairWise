@@ -1,46 +1,35 @@
 import { RadioOption } from "./radio-option.js";
+import { EditableElement } from "./editable-element.js";
 
-export class RadioOptionGroup {
-    constructor({
-        groupId,
-        parentElement,
-        name,
-        additionalClasses = "",
-    }, itemId) {
-        this.groupId = groupId.replace(/^#/, '');
-        this.parentElement = parentElement;
-        this.name = name;
-        this.additionalClasses = additionalClasses;
-        this.itemId = itemId;
-        this.$element = null;
-        this.radioOptions = [];
-        this.render();
+export class RadioOptionGroup extends EditableElement {
+    #name;
+    #radioOptions;
+
+    constructor({ groupId, parentElement, name, additionalClasses = "" }, itemId) {
+        super({ elementId: groupId, parentElement, additionalClasses }, itemId);
+        this.#name = name;
+        this.#radioOptions = [];
+        this.#render();
     }
 
     addRadioOption(options) {
-        options.parentElement = `#${this.groupId}`;
-        options.name = this.name;
-        const radioOption = new RadioOption(options, this.itemId);
-        this.radioOptions.push(radioOption);
+        options.parentElement = `#${this.getElementId()}`;
+        options.name = this.#name;
+        const radioOption = new RadioOption(options, this.getItemId());
+        this.#radioOptions.push(radioOption);
     }
 
-    render() {
-        const newGroupHTML = `<div id="${this.groupId}" class="${this.additionalClasses}"></div>`;
-        $(this.parentElement).append(newGroupHTML);
-        this.$element = $(`#${this.elementId}`);
-    }
-
-    getElement() {
-        return this.$element;
+    #render() {
+        const newGroupHTML = `<div id="${this.getElementId()}" class="${this.getAdditionalClasses()}"></div>`;
+        this.appendHtml(newGroupHTML);
     }
 
     getValue() {
-        for (const option of this.radioOptions) {
+        for (const option of this.#radioOptions) {
             if (option.isChecked()) {
-                return option.getValue(); 
+                return option.getValue();
             }
         }
         return -1;
     }
-
 }

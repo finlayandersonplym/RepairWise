@@ -1,5 +1,5 @@
 import { initializeInventoryPage } from "./inventory/inventory.js";
-
+import { initalizeEvaluatePage } from "./evaluate/evaluate.js"
 function activePage() {
     $(".nav-link").on("click", function (event) {
         event.preventDefault();
@@ -14,13 +14,13 @@ function activePage() {
             if (page === 'inventory') {
                 initializeInventoryPage();
             }
+            if (page === 'evaluate') {
+                initalizeEvaluatePage()
+            }
         });
     });
 }
 
 $(document).ready(function () {
-    $("#page-content").load("pages/evaluate.html", function () {
-        //getData();
-    });
     activePage();
 });

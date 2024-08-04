@@ -1,55 +1,48 @@
-import { updateInput } from "../localstorage-utils.js";
+import { EditableElement } from "./editable-element.js";
 
-export class LiveEditableText {
-    constructor({
-        elementId,
-        updateProperty,
-        parentElement,
-        defaultText = "",
-        additionalClasses = ""
-    }, itemId) {
-        this.elementId = elementId.replace(/^#/, '');
-        this.updateProperty = updateProperty;
-        this.parentElement = parentElement;
-        this.defaultText = defaultText;
-        this.additionalClasses = additionalClasses;
-        this.itemId = itemId;
-        this.$element = null;
-        this.render();
+export class LiveEditableText extends EditableElement {
+    #defaultText;
+    #updateProperty;
+
+    constructor({ elementId, updateProperty, parentElement, defaultText = "", additionalClasses = "" }, itemId) {
+        super({ elementId, parentElement, additionalClasses, displayProperty: "" }, itemId);
+        this.#defaultText = defaultText;
+        this.#updateProperty = updateProperty;
+        this.#render();
     }
 
-    render() {
+    #render() {
         const newEditableTextHTML = `
         <div class="flex-fill">
-            <div id="${this.elementId}" class="editable-text ${this.additionalClasses}">${this.defaultText}</div>
+            <div id="${this.getElementId()}" class="editable-text ${this.getAdditionalClasses()}">${this.#defaultText}</div>
         </div>
         `;
-
-        $(this.parentElement).append(newEditableTextHTML);
-
-        this.$element = $(`#${this.elementId}`); 
-
-        // Attach event listeners
-        this.$element.on("input", (event) => updateInput(event, this.updateProperty, this.itemId));
-        this.$element.on("click", this.handleEditableTextClick);
-        this.$element.on("keypress", this.handleEnterKey);
-        this.$element.on("paste", this.handlePaste);
-        this.$element.on("blur", this.handleBlur);
+        this.appendHtml(newEditableTextHTML);
+        this.#attachEventListeners();
     }
 
-    handleEditableTextClick(event) {
+    #attachEventListeners() {
+        const $element = this.getElement();
+        $element.on("input", (event) => this.updateInput(event, this.#updateProperty, "text"));
+        $element.on("click", this.#handleEditableTextClick);
+        $element.on("keypress", this.#handleEnterKey);
+        $element.on("paste", this.#handlePaste);
+        $element.on("blur", this.#handleBlur);
+    }
+
+    #handleEditableTextClick(event) {
         const $element = $(event.currentTarget);
         $element.attr("contenteditable", "true").addClass("active-editable").focus();
     }
 
-    handleEnterKey(event) {
+    #handleEnterKey(event) {
         if (event.key === "Enter") {
             event.preventDefault();
             $(event.currentTarget).blur();
         }
     }
 
-    handlePaste(event) {
+    #handlePaste(event) {
         event.preventDefault();
         const clipboardData = (event.originalEvent || event).clipboardData;
         const pastedData = clipboardData.getData("text/plain");
@@ -57,14 +50,10 @@ export class LiveEditableText {
         document.execCommand("insertText", false, cleanedData);
     }
 
-    handleBlur(event) {
+    #handleBlur(event) {
         const $element = $(event.currentTarget);
         $element.attr("contenteditable", "false")
             .removeClass("active-editable editable-text")
             .addClass("edited-text");
-    }
-
-    getElement() {
-        return this.$element;
     }
 }

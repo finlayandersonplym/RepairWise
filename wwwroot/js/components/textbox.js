@@ -1,59 +1,34 @@
-import { updateInput } from "../localstorage-utils.js";
+import { EditableElement } from "./editable-element.js";
 
-export class TextBox {
-    constructor({
-        elementId,
-        updateProperty,
-        parentElement,
-        additionalClasses = "",
-        inputType = "text",
-        defaultText = "",
-        displayProperty = ""
-    }, itemId) {
-        this.elementId = elementId.replace(/^#/, '');
-        this.updateProperty = updateProperty;
-        this.parentElement = parentElement;
-        this.additionalClasses = additionalClasses;
-        this.inputType = inputType;
-        this.defaultText = defaultText;
-        this.displayProperty = displayProperty || this.formatDisplayProperty(updateProperty);
-        this.itemId = itemId;
-        this.$element = null;
-        this.render();
+export class TextBox extends EditableElement {
+    #defaultText;
+    #inputType;
+    #updateProperty;
+
+    constructor({ elementId, updateProperty, parentElement, additionalClasses = "", inputType = "text", defaultText = "", displayProperty = "" }, itemId) {
+        super({ elementId, parentElement, additionalClasses, displayProperty }, itemId);
+        this.#defaultText = defaultText;
+        this.#inputType = inputType;
+        this.#updateProperty = updateProperty;
+        this.#render();
     }
 
-    formatDisplayProperty(property) {
-        return property
-            .replace(/_/g, ' ')
-            .split(' ')
-            .map(word => this.capitalizeFirstLetter(word))
-            .join(' ');
-    }
-
-    capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    render() {
+    #render() {
         const newTextBoxHTML = `
-            <div class="flex-fill ${this.additionalClasses}">
-                <h3>${this.displayProperty}</h3>
-                <div class="text-box editable-box" id="${this.elementId}" contenteditable="true" data-placeholder="Enter ${this.displayProperty}">${this.defaultText}</div>
+            <div class="flex-fill ${this.getAdditionalClasses()}">
+                <h3>${this.getFormattedDisplayProperty(this.getDisplayProperty())}</h3>
+                <div class="text-box editable-box" id="${this.getElementId()}" contenteditable="true" data-placeholder="Enter ${this.getDisplayProperty()}">${this.#defaultText}</div>
             </div>
         `;
-        $(this.parentElement).append(newTextBoxHTML);
-        this.$element = $(`#${this.elementId}`); // Assign jQuery object to this.$element
+        this.appendHtml(newTextBoxHTML);
+        this.setElement($(`#${this.getElementId()}`));
 
-        if (this.updateProperty) {
-            this.$element.on("input", (event) => updateInput(event, this.updateProperty, this.itemId, this.inputType));
+        if (this.#updateProperty) {
+            this.getElement().on("input", (event) => this.updateInput(event, this.#updateProperty, this.#inputType));
         }
     }
 
-    getElement() {
-        return this.$element;
-    }
-
     getValue() {
-        return this.$element.text().trim();
+        return this.getElement().text().trim();
     }
 }

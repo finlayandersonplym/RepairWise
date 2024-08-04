@@ -1,47 +1,38 @@
-export class RadioOption {
-    constructor({
-        elementId,
-        parentElement,
-        name,
-        label = "",
-        value = "",
-        checked = false,
-        additionalClasses = "",
-    }, itemId) {
-        this.elementId = elementId.replace(/^#/, '');
-        this.parentElement = parentElement;
-        this.name = name;
-        this.label = label;
-        this.value = value;
-        this.checked = checked;
-        this.additionalClasses = additionalClasses;
-        this.itemId = itemId;
-        this.$element = null;
-        this.render();
+import { EditableElement } from "./editable-element.js";
+
+export class RadioOption extends EditableElement {
+    #name;
+    #label;
+    #value;
+    #checked;
+
+    constructor({ elementId, parentElement, name, label = "", value = "", checked = false, additionalClasses = "" }, itemId) {
+        super({ elementId, parentElement, additionalClasses, displayProperty: label }, itemId);
+        this.#name = name;
+        this.#label = label;
+        this.#value = value;
+        this.#checked = checked;
+        this.#render();
     }
 
-    render() {
+    #render() {
         const newRadioOptionHTML = `
-            <div class="form-check ${this.additionalClasses}">
-                <input class="form-check-input" type="radio" name="${this.name}" id="${this.elementId}" ${this.checked ? "checked" : ""}>
-                <label class="form-check-label" for="${this.elementId}">
-                    ${this.label}
+            <div class="form-check ${this.getAdditionalClasses()}">
+                <input class="form-check-input" type="radio" name="${this.#name}" id="${this.getElementId()}" ${this.#checked ? "checked" : ""}>
+                <label class="form-check-label" for="${this.getElementId()}">
+                    ${this.#label}
                 </label>
             </div>
         `;
-        $(this.parentElement).append(newRadioOptionHTML);
-        this.$element = $(`#${this.elementId}`);
-    }
-
-    getElement() {
-        return this.$element;
+        this.appendHtml(newRadioOptionHTML);
+        this.setElement($(`#${this.getElementId()}`));
     }
 
     getValue() {
-        return this.value;
+        return this.#value;
     }
 
     isChecked() {
-        return this.$element.is(":checked");
+        return this.getElement().is(":checked");
     }
 }

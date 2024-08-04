@@ -1,6 +1,6 @@
 import { initializeItemSearchForm } from "./item-evaluator.js";
 
 
-$(document).ready(function () {
+export function initalizeEvaluatePage() {
     initializeItemSearchForm();
-});
+}

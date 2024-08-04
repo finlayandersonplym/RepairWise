@@ -1,34 +1,20 @@
+import { EditableElement } from "./editable-element.js";
 import { loadItemEditor } from "../inventory/item-editor.js";
 
-export class EditItemButton {
+export class EditItemButton extends EditableElement {
     constructor({ elementId, parentElement, additionalClasses = "" }, itemId) {
-        this.elementId = elementId.replace(/^#/, '');
-        this.parentElement = parentElement;
-        this.additionalClasses = additionalClasses;
-        this.itemId = itemId;
-        this.$element = null;
-        this.render();
+        super({ elementId, parentElement, additionalClasses, displayProperty: "Edit" }, itemId);
+        this.#render();
     }
 
-    render() {
-        // Create the HTML for the edit button
+    #render() {
         const editButtonHTML = `
-            <button id="${this.elementId}" class="edit-button ${this.additionalClasses}">
+            <button id="${this.getElementId()}" class="edit-button ${this.getAdditionalClasses()}">
                 Edit
             </button>
         `;
-
-        // Append the button to the parent element
-        $(this.parentElement).append(editButtonHTML);
-
-        this.$element = $(`#${this.elementId}`); // Assign jQuery object to this.$element
-
-        // Attach click event listener
-        this.$element.on("click", () => loadItemEditor(this.itemId));
-    }
-
-    // Method to return the jQuery element
-    getElement() {
-        return this.$element;
+        this.appendHtml(editButtonHTML);
+        this.setElement($(`#${this.getElementId()}`));
+        this.getElement().on("click", () => loadItemEditor(this.getItemId()));
     }
 }

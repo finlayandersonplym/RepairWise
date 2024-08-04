@@ -1,10 +1,13 @@
-import { addJsonItem, getJsonItem } from "../localstorage-utils.js";
-import { ComponentFactory }  from "../components/componentFactory.js";
-import { populateTable } from "./table.js";
+import { LocalStorageManager } from "../localstorage-utils.js";
+import { ComponentFactory } from "../components/component-factory.js";
+import TableManager from "./table-manager.js";
+
+const localStorageManager = new LocalStorageManager();
+const tableManager = new TableManager("itemList", "#item-table", "#item-filter-text");
+
 export function openExistingItem(itemId) {
     $("#selection-loader").load("pages/inventory/existing-item.html", () => {
-        const item = getJsonItem("itemList", "id", itemId);
-
+        const item = localStorageManager.getJsonItem("itemList", "id", itemId);
         const componentFactory = new ComponentFactory(itemId);
 
         componentFactory.addTextField({
@@ -58,11 +61,9 @@ export function loadItemEditor(itemId = null) {
     $("#selection-loader").load("pages/inventory/item-editor.html", () => {
         let item, newId;
         if (itemId) {
-            // Editing existing item
-            item = getJsonItem("itemList", "id", itemId);
+            item = localStorageManager.getJsonItem("itemList", "id", itemId);
             newId = itemId;
         } else {
-            // Creating new item
             item = {
                 id: "",
                 name: "Unnamed Item",
@@ -76,12 +77,11 @@ export function loadItemEditor(itemId = null) {
                 weight: 0,
                 dimensions: "",
             };
-            newId = addJsonItem("itemList", item);
+            newId = localStorageManager.addJsonItem("itemList", item);
         }
 
         const componentFactory = new ComponentFactory(newId);
 
-        // Initialize all essential fields with editable properties
         componentFactory.createLiveEditableText({
             elementId: "#item-name-text",
             updateProperty: "name",
@@ -97,7 +97,7 @@ export function loadItemEditor(itemId = null) {
             defaultText: item.description,
         });
 
-        const stateOptions = ["Serviced", "In Progress", "Pending Inspection", "Completed", "Unknown"];
+        const stateOptions = ["Serviced", "In Progress", "Pending Inspection", "Completed", "Sold", "Unknown"];
         componentFactory.createSelect({
             elementId: "#state-select",
             updateProperty: "state",
@@ -172,12 +172,8 @@ export function loadItemEditor(itemId = null) {
             defaultText: item.dimensions,
         });
 
-        populateTable();
+        tableManager.populateTable();
 
-        // Refresh the table when any live-item input changes
-        $(".live-item").on("input", populateTable);
+        $(".live-item").on("input", tableManager.populateTable.bind(tableManager));
     });
 }
-
-
-

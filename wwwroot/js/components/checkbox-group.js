@@ -1,31 +1,24 @@
+import { EditableElement } from "./editable-element.js";
 import { CheckBox } from "./checkBox.js";
 
-export class CheckBoxGroup {
-    constructor({
-        groupId,
-        parentElement,
-        additionalClasses = "",
-    }, itemId) {
-        this.groupId = groupId.replace(/^#/, '');
-        this.parentElement = parentElement;
-        this.additionalClasses = additionalClasses;
-        this.itemId = itemId;
-        this.$element = null;
-        this.checkBoxes = [];
-        this.render();
+export class CheckBoxGroup extends EditableElement {
+    #checkBoxes;
+
+    constructor({ groupId, parentElement, additionalClasses = "" }, itemId) {
+        super({ elementId: groupId, parentElement, additionalClasses }, itemId);
+        this.#checkBoxes = [];
+        this.#render();
     }
 
     addCheckBox(options) {
-        options.parentElement = `#${this.groupId}`;
-        const checkBox = new CheckBox(options, this.itemId);
-        this.checkBoxes.push(checkBox);
+        options.parentElement = `#${this.getElementId()}`;
+        const checkBox = new CheckBox(options, this.getItemId());
+        this.#checkBoxes.push(checkBox);
         return checkBox;
     }
 
-    render() {
-        const newGroupHTML = `<div id="${this.groupId}" class="${this.additionalClasses}"></div>`;
-        $(this.parentElement).append(newGroupHTML);
-
-        this.$element = $(`#${this.elementId}`); 
+    #render() {
+        const newGroupHTML = `<div id="${this.getElementId()}" class="${this.getAdditionalClasses()}"></div>`;
+        this.appendHtml(newGroupHTML);
     }
 }

@@ -1,66 +1,40 @@
-import { updateInput } from "../localstorage-utils.js";
+import { EditableElement } from "./editable-element.js";
 
-export class Select {
-    constructor({
-        elementId,
-        updateProperty,
-        parentElement,
-        options,
-        additionalClasses = "",
-        displayProperty = "",
-        defaultValue = "",
-    }, itemId) {
-        this.elementId = elementId.replace(/^#/, '');
-        this.updateProperty = updateProperty;
-        this.parentElement = parentElement;
-        this.options = options;
-        this.additionalClasses = additionalClasses;
-        this.displayProperty = displayProperty || this.formatDisplayProperty(updateProperty);
-        this.defaultValue = defaultValue,
-        this.itemId = itemId;
-        this.$element = null;
-        this.render();
+export class Select extends EditableElement {
+    #options;
+    #defaultValue;
+    #updateProperty;
+
+    constructor({ elementId, updateProperty, parentElement, options, additionalClasses = "", displayProperty = "", defaultValue = "" }, itemId) {
+        super({ elementId, parentElement, additionalClasses, displayProperty }, itemId);
+        this.#options = options;
+        this.#defaultValue = defaultValue;
+        this.#updateProperty = updateProperty;
+        this.#render();
     }
 
-    formatDisplayProperty(property) {
-        return property
-            .replace(/_/g, ' ')
-            .split(' ')
-            .map(word => this.capitalizeFirstLetter(word))
-            .join(' ');
-    }
-
-    capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    render() {
-        const optionsHTML = this.options.map(option =>
-            `<option value="${option}" ${option === this.defaultValue ? 'selected' : ''}>${option}</option>`
+    #render() {
+        const optionsHTML = this.#options.map(option =>
+            `<option value="${option}" ${option === this.#defaultValue ? 'selected' : ''}>${option}</option>`
         ).join('');
 
         const newSelectHTML = `
-            <div class="flex-fill ${this.additionalClasses}">
-                <h3>${this.displayProperty}</h3>
-                <select class="editable-box form-select" id="${this.elementId}">
+            <div class="flex-fill ${this.getAdditionalClasses()}">
+                <h3>${this.getFormattedDisplayProperty(this.getDisplayProperty())}</h3>
+                <select class="editable-box form-select" id="${this.getElementId()}">
                     ${optionsHTML}
                 </select>
             </div>
         `;
-        $(this.parentElement).append(newSelectHTML);
+        this.appendHtml(newSelectHTML);
+        this.setElement($(`#${this.getElementId()}`));
 
-        this.$element = $(`#${this.elementId}`); 
-
-        if (this.updateProperty) {
-            this.$element.on("change", (event) => updateInput(event, this.updateProperty, this.itemId));
+        if (this.#updateProperty) {
+            this.getElement().on("change", (event) => this.updateInput(event, this.#updateProperty, "string"));
         }
     }
 
-    getElement() {
-        return this.$element;
-    }
-
     getValue() {
-        return this.$element.val();
+        return this.getElement().val();
     }
 }
