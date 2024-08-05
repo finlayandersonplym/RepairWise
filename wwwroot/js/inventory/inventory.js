@@ -1,6 +1,6 @@
 import { loadItemEditor } from "./item-editor.js";
 import { LocalStorageManager } from "../localstorage-utils.js";
-import TableManager from "./table-manager.js";
+import { TableManager }  from "./table-manager.js";
 
 const localStorageManager = new LocalStorageManager();
 const tableManager = new TableManager("itemList", "#item-table", "#item-filter-text");

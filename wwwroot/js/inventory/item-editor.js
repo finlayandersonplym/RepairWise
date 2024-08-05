@@ -1,10 +1,8 @@
 import { LocalStorageManager } from "../localstorage-utils.js";
 import { ComponentFactory } from "../components/component-factory.js";
-import TableManager from "./table-manager.js";
+import { TableManager } from "./table-manager.js";
 
 const localStorageManager = new LocalStorageManager();
-const tableManager = new TableManager("itemList", "#item-table", "#item-filter-text");
-
 export function openExistingItem(itemId) {
     $("#selection-loader").load("pages/inventory/existing-item.html", () => {
         const item = localStorageManager.getJsonItem("itemList", "id", itemId);
@@ -76,6 +74,7 @@ export function loadItemEditor(itemId = null) {
                 brand: "",
                 weight: 0,
                 dimensions: "",
+                category: "",
             };
             newId = localStorageManager.addJsonItem("itemList", item);
         }
@@ -88,6 +87,7 @@ export function loadItemEditor(itemId = null) {
             parentElement: "#item-name-section",
             defaultText: item.name,
             additionalClasses: "live-item",
+            displayProperty: "Item Name"
         });
 
         componentFactory.createTextBox({
@@ -95,6 +95,7 @@ export function loadItemEditor(itemId = null) {
             updateProperty: "description",
             parentElement: "#edit-description-section",
             defaultText: item.description,
+            displayProperty: "Description"
         });
 
         const stateOptions = ["Serviced", "In Progress", "Pending Inspection", "Completed", "Sold", "Unknown"];
@@ -105,9 +106,8 @@ export function loadItemEditor(itemId = null) {
             options: stateOptions,
             defaultValue: item.state,
             additionalClasses: "live-item edit-gap-sizing",
+            displayProperty: "State"
         });
-
-        console.log(item.state);
 
         componentFactory.createTextBox({
             elementId: "#item-selling-price",
@@ -116,6 +116,7 @@ export function loadItemEditor(itemId = null) {
             additionalClasses: "live-item edit-gap-sizing",
             inputType: "float",
             defaultText: item.selling_price,
+            displayProperty: "Selling Price"
         });
 
         componentFactory.createTextBox({
@@ -125,6 +126,7 @@ export function loadItemEditor(itemId = null) {
             additionalClasses: "edit-gap-sizing",
             inputType: "integer",
             defaultText: item.quantity,
+            displayProperty: "Quantity"
         });
 
         componentFactory.createTextBox({
@@ -134,6 +136,7 @@ export function loadItemEditor(itemId = null) {
             additionalClasses: "edit-gap-sizing",
             inputType: "string",
             defaultText: item.brand,
+            displayProperty: "Brand"
         });
 
         componentFactory.createTextBox({
@@ -143,6 +146,7 @@ export function loadItemEditor(itemId = null) {
             additionalClasses: "edit-gap-sizing",
             inputType: "float",
             defaultText: item.cost_price,
+            displayProperty: "Cost Price"
         });
 
         componentFactory.createTextBox({
@@ -152,6 +156,7 @@ export function loadItemEditor(itemId = null) {
             additionalClasses: "edit-gap-sizing",
             inputType: "float",
             defaultText: item.repair_price,
+            displayProperty: "Repair Price"
         });
 
         componentFactory.createTextBox({
@@ -161,6 +166,7 @@ export function loadItemEditor(itemId = null) {
             additionalClasses: "edit-gap-sizing",
             inputType: "float",
             defaultText: item.weight,
+            displayProperty: "Weight"
         });
 
         componentFactory.createTextBox({
@@ -170,7 +176,28 @@ export function loadItemEditor(itemId = null) {
             additionalClasses: "edit-gap-sizing",
             inputType: "string",
             defaultText: item.dimensions,
+            displayProperty: "Dimensions"
         });
+
+        componentFactory.createAutocomplete({
+            elementId: "#autocomplete-category",
+            updateProperty: "category",
+            parentElement: "#item-edit-section",
+            additionalClasses: "edit-gap-sizing",
+            displayProperty: "Category"
+        });
+
+
+        const tableManager = new TableManager("itemList", "#item-table", "#item-filter-text");
+
+        componentFactory.createDeleteItemButton({
+            elementId: "#item-delete-button",
+            parentElement: "#item-edit-section",
+            additionalClasses: "btn btn-danger",
+        },
+            tableManager
+        );
+
 
         tableManager.populateTable();
 

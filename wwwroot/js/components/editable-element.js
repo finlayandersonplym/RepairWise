@@ -1,6 +1,6 @@
 import { LocalStorageManager } from "../localstorage-utils.js";
 
-class EditableElement {
+export class EditableElement {
     #elementId;
     #parentElement;
     #additionalClasses;
@@ -9,12 +9,7 @@ class EditableElement {
     #$element;
     #localStorageManager;
 
-    constructor({
-        elementId,
-        parentElement,
-        additionalClasses = "",
-        displayProperty = ""
-    }, itemId) {
+    constructor({ elementId, parentElement, additionalClasses = "", displayProperty = "" }, itemId) {
         this.#elementId = elementId.replace(/^#/, '');
         this.#parentElement = parentElement;
         this.#additionalClasses = additionalClasses;
@@ -57,11 +52,7 @@ class EditableElement {
     }
 
     #formatDisplayProperty(property) {
-        return property
-            .replace(/_/g, ' ')
-            .split(' ')
-            .map(word => this.#capitalizeFirstLetter(word))
-            .join(' ');
+        return property.replace(/_/g, ' ').split(' ').map(word => this.#capitalizeFirstLetter(word)).join(' ');
     }
 
     #capitalizeFirstLetter(string) {
@@ -76,6 +67,12 @@ class EditableElement {
     updateInput(event, updateProperty, inputType) {
         this.#localStorageManager.updateInput(event, updateProperty, this.getItemId(), inputType);
     }
-}
 
-export { EditableElement };
+    deleteItem() {
+        this.#localStorageManager.deleteJsonItem("itemList", "id", this.getItemId());
+    }
+
+    getLocalStorageManager() {
+        return this.#localStorageManager;
+    }
+}

@@ -5,12 +5,14 @@ import { TextBox } from "./textBox.js";
 import { Select } from "./select.js";
 import { LiveEditableText } from "./live-editable-text.js";
 import { EditItemButton } from "./edit-item-button.js";
+import { DeleteItemButton } from "./delete-item-button.js";
 import { TextField } from "./text-field.js";
 import { CheckBox } from "./checkbox.js";
 import { CheckBoxGroup } from "./checkbox-group.js";
 import { Label } from "./label.js";
 import { RadioOption } from "./radio-option.js";
 import { RadioOptionGroup } from "./radio-option-group.js";
+import { Autocomplete } from "./autocomplete.js";
 
 export class ComponentFactory {
     constructor(id) {
@@ -34,18 +36,22 @@ export class ComponentFactory {
     }
 
     createCheckBoxGroup(options) {
-        return new CheckBoxGroup(options, this.itemid);
+        return new CheckBoxGroup(options, this.itemId);
     }
 
     createEditItemButton(options) {
         return new EditItemButton(options, this.itemId);
     }
 
+    createDeleteItemButton(options, tableManager) {
+        return new DeleteItemButton(options, this.itemId, tableManager);
+    }
+
     addTextField(options) {
         return new TextField(options, this.itemId);
     }
 
-    createLabel (options) {
+    createLabel(options) {
         return new Label(options, this.itemId);
     }
 
@@ -57,4 +63,7 @@ export class ComponentFactory {
         return new RadioOptionGroup(options, this.itemId);
     }
 
+    createAutocomplete(options) {
+        return new Autocomplete(options, this.itemId);
+    }
 }

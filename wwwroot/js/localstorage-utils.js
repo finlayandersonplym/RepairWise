@@ -69,6 +69,7 @@ export class LocalStorageManager {
         } else {
             newValue = element.text().trim();
         }
+        console.log(newValue);
 
         // Keep in mind that JSON doesn't have integers or floats just number
         switch (inputType) {
@@ -209,6 +210,19 @@ export class LocalStorageManager {
             console.error("Failed to read file: ", event.target.error);
         };
         reader.readAsText(file);
+    }
+
+    /**
+     * Deletes an item from a list stored in localStorage by matching a specific property and value.
+     *
+     * @param {string} key - The key under which the list of items is stored in localStorage.
+     * @param {string} matchProperty - The property name to match against in the items.
+     * @param {any} matchValue - The value to match for the specified property.
+     */
+    deleteJsonItem(key, matchProperty, matchValue) {
+        let items = JSON.parse(localStorage.getItem(key)) || [];
+        items = items.filter(item => item[matchProperty] !== matchValue);
+        localStorage.setItem(key, JSON.stringify(items));
     }
 
     /**
