@@ -1,10 +1,8 @@
 export class LocalStorageManager {
     #itemIDKey;
-    #historyKey;
 
     constructor() {
         this.#itemIDKey = "itemID";
-        this.#historyKey = "history";
     }
 
     /**
@@ -21,6 +19,7 @@ export class LocalStorageManager {
 
         // Add new ID to the value object
         value.id = currentId;
+        value.history = [];
 
         let currentValue = JSON.parse(localStorage.getItem(key) || "[]");
 
@@ -44,7 +43,14 @@ export class LocalStorageManager {
 
         currentValue = currentValue.map((item) => {
             if (item[matchProperty] == matchValue) {
+                const oldValue = item[updateProperty];
                 item[updateProperty] = updateValue;
+                item.history.push({
+                    updateProperty,
+                    oldValue,
+                    newValue: updateValue,
+                    timestamp: new Date().toISOString()
+                });
             }
             return item;
         });
@@ -69,7 +75,6 @@ export class LocalStorageManager {
         } else {
             newValue = element.text().trim();
         }
-        console.log(newValue);
 
         // Keep in mind that JSON doesn't have integers or floats just number
         switch (inputType) {
@@ -88,19 +93,8 @@ export class LocalStorageManager {
             newValue = null; // Handle invalid numbers gracefully
         }
 
-        // Retrieve this before updating so we can log it in log history
-        const currentItem = this.getJsonItem("itemList", "id", id);
-        const oldValue = currentItem ? currentItem[updateProperty] : null;
-
+        // Update the item property and log history
         this.updateJsonItemProperty("itemList", updateProperty, newValue, "id", id);
-
-        this.#logHistory({
-            matchValue: id,
-            updateProperty,
-            oldValue,
-            newValue,
-            timestamp: new Date().toISOString()
-        });
     }
 
     /**
@@ -223,16 +217,5 @@ export class LocalStorageManager {
         let items = JSON.parse(localStorage.getItem(key)) || [];
         items = items.filter(item => item[matchProperty] !== matchValue);
         localStorage.setItem(key, JSON.stringify(items));
-    }
-
-    /**
-     * Logs the change to the history group in localStorage.
-     *
-     * @param {Object} changeDetails - An object containing details of the change.
-     */
-    #logHistory(changeDetails) {
-        const history = JSON.parse(localStorage.getItem(this.#historyKey)) || [];
-        history.push(changeDetails);
-        localStorage.setItem(this.#historyKey, JSON.stringify(history));
     }
 }

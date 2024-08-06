@@ -1,8 +1,18 @@
-
 import { LocalStorageManager } from "../localstorage-utils.js";
-import { ComponentFactory } from "../components/component-factory.js";
+import { ChartManager } from "../charts/chart-manager.js";
 
 const localStorageManager = new LocalStorageManager();
+
+export function initializeSalesAnalytics() {
+    const items = loadSalesData();
+    const stats = calculateStatistics(items);
+    displayStatistics(stats);
+
+    const categories = groupByCategory(items);
+    ChartManager.renderCategoryChart(categories, "sales-category-chart");
+    ChartManager.renderCumulativeRevenueChart(items, "cumlative-revenue-chart");
+    ChartManager.renderRevenueByDayChart(items, "revenue-chart");
+}
 
 function loadSalesData() {
     return localStorageManager.getJsonItems("itemList").filter(item => item.state === "Sold");
@@ -67,22 +77,41 @@ function calculateStatistics(items) {
 function displayStatistics(stats) {
     const statsContent = document.getElementById("sales-stats-section");
     statsContent.innerHTML = `
-        <p><strong>Total Sold Items:</strong> ${stats.totalItems}</p>
-        <p><strong>Total Revenue:</strong> &pound${stats.totalRevenue}</p>
-        <p><strong>Average Price:</strong> &pound${stats.avgPrice}</p>
-        <p><strong>Minimum Price:</strong> &pound${stats.minPrice}</p>
-        <p><strong>Maximum Price:</strong> &pound${stats.maxPrice}</p>
-        <p><strong>Median Price:</strong> &pound${stats.medianPrice}</p>
-        <p><strong>Most Popular Category:</strong> ${stats.mostPopularCategory}</p>
-        <p><strong>Number of Unique Categories:</strong> ${stats.uniqueCategories}</p>
-        <p><strong>Free Postage Percentage:</strong> ${stats.freePostagePercentage}%</p>
-        <h4>Condition Distribution:</h4>
-        <ul>
-            ${Object.keys(stats.conditionStats).map(condition =>
+        <div class="stats-container">
+            <div class="stat-item">
+                <strong>Total Sold Items:</strong> ${stats.totalItems}
+            </div>
+            <div class="stat-item">
+                <strong>Total Revenue:</strong> &pound${stats.totalRevenue}
+            </div>
+            <div class="stat-item">
+                <strong>Average Price:</strong> &pound${stats.avgPrice}
+            </div>
+            <div class="stat-item">
+                <strong>Minimum Price:</strong> &pound${stats.minPrice}
+            </div>
+            <div class="stat-item">
+                <strong>Maximum Price:</strong> &pound${stats.maxPrice}
+            </div>
+            <div class="stat-item">
+                <strong>Median Price:</strong> &pound${stats.medianPrice}
+            </div>
+            <div class="stat-item">
+                <strong>Most Popular Category:</strong> ${stats.mostPopularCategory}
+            </div>
+            <div class="stat-item">
+                <strong>Number of Unique Categories:</strong> ${stats.uniqueCategories}
+            <div class="condition-distribution">
+                <strong>Condition Distribution:</strong>
+                <ul>
+                    ${Object.keys(stats.conditionStats).map(condition =>
         `<li>${condition}: ${stats.conditionStats[condition]}</li>`).join("")}
-        </ul>
+                </ul>
+            </div>
+        </div>
     `;
 }
+
 
 function groupByCategory(items) {
     return items.reduce((acc, item) => {
@@ -95,51 +124,3 @@ function groupByCategory(items) {
     }, {});
 }
 
-function renderCategoryChart(categories) {
-    const ctx = document.getElementById("sales-category-chart").getContext("2d");
-    const labels = Object.keys(categories);
-    const data = Object.values(categories).map(items => items.length);
-
-    new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Items Sold",
-                data: data,
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: "Category"
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: "Number of Items Sold"
-                    },
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            }
-        }
-    });
-}
-
-export function initializeSalesAnalytics() {
-    const items = loadSalesData();
-    const stats = calculateStatistics(items);
-    displayStatistics(stats);
-
-    const categories = groupByCategory(items);
-    renderCategoryChart(categories);
-}

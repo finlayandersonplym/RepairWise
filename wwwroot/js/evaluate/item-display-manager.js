@@ -1,3 +1,5 @@
+import { ChartManager } from "../charts/chart-manager.js";
+
 export class ItemDisplayManager {
     #itemsDisplaySection;
     #itemsAnalyticsSection;
@@ -8,10 +10,10 @@ export class ItemDisplayManager {
     }
 
     displayItems(items) {
-        this.#itemsDisplaySection.innerHTML = '';
+        this.#itemsDisplaySection.innerHTML = "";
 
         items.forEach(item => {
-            const updatedImageUrl = item.getImageUrl().replace(/l140|l500/, 'l1000');
+            const updatedImageUrl = item.getImageUrl().replace(/l140|l500/, "l1000");
             const itemHTML = `
                 <div class="item-card">
                     <div class="item-image">
@@ -25,7 +27,7 @@ export class ItemDisplayManager {
                         <p class="item-condition"><strong>Condition:</strong> ${item.getCondition()}</p>
                         <p class="item-postage"><strong>Postage:</strong> ${item.getPostage()}</p>
                         <p class="item-seller"><strong>Seller:</strong> ${item.getSeller()}</p>
-                        ${item.getSoldDate() ? `<p class="item-sold-date"><strong>Sold Date:</strong> ${item.getSoldDate()}</p>` : ''}
+                        ${item.getSoldDate() ? `<p class="item-sold-date"><strong>Sold Date:</strong> ${item.getSoldDate()}</p>` : ""}
                     </div>
                 </div>
             `;
@@ -34,7 +36,7 @@ export class ItemDisplayManager {
     }
 
     displayItemAnalytics(items) {
-        this.#itemsAnalyticsSection.innerHTML = '';
+        this.#itemsAnalyticsSection.innerHTML = "";
 
         const totalItems = items.length;
         const prices = items.map(item => item.getTotalPrice());
@@ -55,7 +57,7 @@ export class ItemDisplayManager {
         }, {});
 
         const uniqueSellers = [...new Set(items.map(item => item.getSeller()))].length;
-        const freePostageCount = items.filter(item => item.getPostage().toLowerCase().includes('free')).length;
+        const freePostageCount = items.filter(item => item.getPostage().toLowerCase().includes("free")).length;
         const freePostagePercentage = ((freePostageCount / totalItems) * 100).toFixed(2);
 
         const statsHTML = `
@@ -82,52 +84,18 @@ export class ItemDisplayManager {
                         ${Object.keys(conditionStats).map(condition => {
             const averageConditionPrice = (conditionStats[condition].total / conditionStats[condition].count).toFixed(2);
             return `<li>${condition}: ${conditionStats[condition].count} (Average Price: &pound;${averageConditionPrice})</li>`;
-        }).join('')}
+        }).join("")}
                     </ul>
                 </div>
-                <div"><canvas id="canvas"></canvas></div>
+                <div"><canvas id="sold-items-chart"></canvas></div>
             </div>
         `;
         this.#itemsAnalyticsSection.innerHTML = statsHTML;
 
         const soldItems = items.filter(item => item.getSoldDate());
-        const labels = soldItems.map(item => item.getSoldDate().replace('Sold ', ''));
+        const labels = soldItems.map(item => item.getSoldDate().replace("Sold ", ""));
         const data = soldItems.map(item => parseFloat(item.getPrice().replace(/[^0-9.-]+/g, "")));
 
-        this.#itemGraph(labels, data);
-    }
-
-    #itemGraph(labels, data) {
-        new Chart(
-            document.getElementById('canvas'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Sold Items Price',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Date Sold'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Price'
-                        },
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        ChartManager.renderSoldItemsPriceChart(labels, data, "sold-items-chart")
     }
 }

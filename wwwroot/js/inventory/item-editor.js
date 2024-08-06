@@ -75,6 +75,7 @@ export function loadItemEditor(itemId = null) {
                 weight: 0,
                 dimensions: "",
                 category: "",
+                history: [],
             };
             newId = localStorageManager.addJsonItem("itemList", item);
         }

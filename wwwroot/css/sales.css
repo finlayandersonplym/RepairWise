@@ -1,0 +1,52 @@
+﻿.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(45%, 1fr));
+    gap: 10px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.canvas-container {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    font-size: 12px;
+}
+
+.stat-item:hover {
+    transform: scale(1.02);
+}
+
+.stat-item strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.condition-distribution ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.condition-distribution li {
+    background-color: #e9ecef;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.condition-distribution h4 {
+    margin-top: 0;
+}
