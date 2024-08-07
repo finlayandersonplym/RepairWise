@@ -99,7 +99,7 @@ export function loadItemEditor(itemId = null) {
             displayProperty: "Description"
         });
 
-        const stateOptions = ["Serviced", "In Progress", "Pending Inspection", "Completed", "Sold", "Unknown"];
+        const stateOptions = ["Serviced", "Listed", "In Progress", "Sold", "Unknown"];
         componentFactory.createSelect({
             elementId: "#state-select",
             updateProperty: "state",

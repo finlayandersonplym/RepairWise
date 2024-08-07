@@ -1,5 +1,18 @@
-﻿<head>
-    <link href="css/dashboard.css" rel="stylesheet">
-</head>
+﻿<link href="css/dashboard.css" rel="stylesheet">
 
-<div></div>
+<div id="dashboard" class="margin-x margin-y">
+    <div id="item-analytics" class="row dashboard-section">
+        <div id="item-price-analytics" class="col-4"></div>
+        <div id="item-categorires" class="col-4">
+            <canvas id="item-category-graph"></canvas>
+        </div>
+        <div id="item-watch-secction" class="col-4">
+        </div>
+    </div>
+
+    <div id="price-analysis" class="dashboard-section"></div>
+    <div class="dashboard-section">
+        <h3>Price Distribution</h3>
+        <canvas id="price-distribution-chart"></canvas>
+    </div>
+</div>

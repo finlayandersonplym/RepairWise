@@ -1,6 +1,7 @@
 import { initializeInventoryPage } from "./inventory/inventory.js";
 import { initializeEvaluatePage } from "./evaluate/evaluate.js"
 import { initializeSalesPage } from "./sales/sales.js"
+import { initializeDashboard } from "./dashboard/dashboard.js"
 function activePage() {
     $(".nav-link").on("click", function (event) {
         event.preventDefault();
@@ -20,6 +21,9 @@ function activePage() {
             }
             if (page === 'sales') {
                 initializeSalesPage()
+            }
+            if (page === 'dashboard') {
+                initializeDashboard()
             }
         });
     });

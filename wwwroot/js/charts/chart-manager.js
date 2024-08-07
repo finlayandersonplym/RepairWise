@@ -1,6 +1,6 @@
-import { LocalStorageManager } from "../localstorage-utils.js";
 export class ChartManager {
-    static renderCategoryChart(categories, elementId) {
+
+    static renderInventoryCategoryChart(categories, elementId) {
         const ctx = document.getElementById(elementId).getContext("2d");
         const labels = Object.keys(categories);
         const data = Object.values(categories).map(items => items.length);
@@ -10,7 +10,7 @@ export class ChartManager {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: "Items Sold",
+                    label: "Items in Inventory",
                     data: data,
                     backgroundColor: "rgba(75, 192, 192, 0.2)",
                     borderColor: "rgba(75, 192, 192, 1)",
@@ -28,7 +28,7 @@ export class ChartManager {
                     y: {
                         title: {
                             display: true,
-                            text: "Number of Items Sold"
+                            text: "Number of Items"
                         },
                         beginAtZero: true,
                         ticks: {
@@ -45,8 +45,7 @@ export class ChartManager {
 
         const itemsWithSoldDate = this.#getItemsWithSoldDate(items);
         const sortedItems = itemsWithSoldDate.sort((a, b) => new Date(a.sold_date) - new Date(b.sold_date));
-        console.log(sortedItems);
-        const labels = itemsWithSoldDate.map(item => item.sold_date);
+        const labels = sortedItems.map(item => item.sold_date);
         const cumulativeRevenue = [];
         let totalRevenue = 0;
 
@@ -165,6 +164,46 @@ export class ChartManager {
                             text: "Price"
                         },
                         beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    static renderCategoryChart(categories, elementId) {
+        const ctx = document.getElementById(elementId).getContext("2d");
+        const labels = Object.keys(categories);
+        const data = Object.values(categories).map(items => items.length);
+
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Items Sold",
+                    data: data,
+                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Category"
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: "Number of Items Sold"
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 }
             }

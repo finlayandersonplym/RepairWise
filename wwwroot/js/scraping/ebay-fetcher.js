@@ -1,34 +1,13 @@
-import { Item } from "./item.js"
-
-
-/**
- * @typedef {Object} #searchOptions
- * @property {string} [itemKeywords]
- * @property {"All words, any order" | "Any words, exact order" | "Exact words, exact order" | "Exact words, any order"} [keywordOptions]
- * @property {boolean} [completedItems]
- * @property {boolean} [soldItems]
- * @property {boolean} [titleAndDesc]
- * @property {"accepts_offers" | "auction" | "buy_it_now" | "classified_ads"} [buyingFormat]
- * @property {"Time: ending soonest" | "Time: newly listed" | "Price + postage: lowest first" | "Price + postage: highest first" | "Price: highest first" | "Price: lowest first" | "Best match"} [sortOptions]
- */
+import { Item } from "./item.js";
 
 export class EbayFetcher {
-    #searchOptions;
-
-    /**
-     * @param {#searchOptions} #searchOptions
-     */
-    constructor(searchOptions) {
-        this.#searchOptions = searchOptions;
-    }
-
-
     /**
      * Assembles an eBay search URL based on the provided options.
+     * @param {Object} searchOptions - The search options to use for assembling the URL.
      * @returns {string} - The assembled eBay search URL.
      */
-    #assembleEbayURL() {
-        let url = `https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(this.#searchOptions.itemKeywords)}`;
+    static #assembleEbayURL(searchOptions) {
+        let url = `https://www.ebay.co.uk/sch/i.html?_nkw=${encodeURIComponent(searchOptions.itemKeywords)}`;
 
         const keywordOptionsMap = {
             "All words, any order": 1,
@@ -36,17 +15,17 @@ export class EbayFetcher {
             "Exact words, exact order": 3,
             "Exact words, any order": 4
         };
-        if (this.#searchOptions.keywordOptions) {
-            url += `&_in_kw=${keywordOptionsMap[this.#searchOptions.keywordOptions]}`;
+        if (searchOptions.keywordOptions) {
+            url += `&_in_kw=${keywordOptionsMap[searchOptions.keywordOptions]}`;
         }
 
-        if (this.#searchOptions.titleAndDesc) {
+        if (searchOptions.titleAndDesc) {
             url += "&LH_TitleDesc=1";
         }
-        if (this.#searchOptions.completedItems) {
+        if (searchOptions.completedItems) {
             url += "&LH_Complete=1";
         }
-        if (this.#searchOptions.soldItems) {
+        if (searchOptions.soldItems) {
             url += "&LH_Sold=1";
         }
 
@@ -58,8 +37,8 @@ export class EbayFetcher {
             "classified_ads": "LH_CAds=1",
             "accepts_offers": "LH_BO=1",
         };
-        if (this.#searchOptions.buyingFormat) {
-            url += `&${buyingFormatMap[this.#searchOptions.buyingFormat]}`;
+        if (searchOptions.buyingFormat) {
+            url += `&${buyingFormatMap[searchOptions.buyingFormat]}`;
         }
 
         const itemConditionMap = {
@@ -67,8 +46,8 @@ export class EbayFetcher {
             "Used": 4,
             "Parts": 7000
         };
-        if (this.#searchOptions.itemCondition && this.#searchOptions.itemCondition !== "All") {
-            url += `&LH_ItemCondition=${itemConditionMap[this.#searchOptions.itemCondition]}`;
+        if (searchOptions.itemCondition && searchOptions.itemCondition !== "All") {
+            url += `&LH_ItemCondition=${itemConditionMap[searchOptions.itemCondition]}`;
         }
 
         const sortOptionsMap = {
@@ -80,8 +59,8 @@ export class EbayFetcher {
             "Price: highest first": 3,
             "Best match": 12
         };
-        if (this.#searchOptions.sortOptions) {
-            url += `&_sop=${sortOptionsMap[this.#searchOptions.sortOptions]}`;
+        if (searchOptions.sortOptions) {
+            url += `&_sop=${sortOptionsMap[searchOptions.sortOptions]}`;
         }
 
         url += "&_sacat=0";
@@ -91,10 +70,11 @@ export class EbayFetcher {
 
     /**
      * Fetches and extracts eBay items based on the provided search options.
+     * @param {Object} searchOptions - The search options to use for fetching items.
      * @returns {Promise<Item[]>} - A promise that resolves to an array of Item objects.
      */
-    async fetchEbayItems() {
-        const originalUrl = this.#assembleEbayURL();
+    static async fetchEbayItems(searchOptions) {
+        const originalUrl = this.#assembleEbayURL(searchOptions);
         const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(originalUrl);
 
         try {
@@ -122,7 +102,7 @@ export class EbayFetcher {
      * @param {Element} item - The item element from which to extract data.
      * @returns {Item} - The extracted item data.
      */
-    #extractItemData(item) {
+    static #extractItemData(item) {
         const titleElement = item.querySelector('.s-item__title');
         const priceElement = item.querySelector('.s-item__price');
         const conditionElement = item.querySelector('.s-item__subtitle .SECONDARY_INFO');

@@ -1,6 +1,7 @@
 import { ComponentFactory } from "../components/component-factory.js";
 import { EbayFetcher } from "../scraping/ebay-fetcher.js"; 
 import { ItemDisplayManager } from "./item-display-manager.js";
+import { ItemWatcher } from "../dashboard/item-watch-form.js";
 
 export function initializeItemSearchForm() {
     $("#item-search-form").load("pages/evaluate/item-search-form.html", () => {
@@ -125,6 +126,24 @@ export function initializeItemSearchForm() {
         });
 
         $("#item-search-form").append('<button id="search-button" class="btn btn-primary">Search</button>');
+        $("#item-search-form").append('<button id="watcher-button" class="btn btn-primary">Add To Watch</button>');
+
+        $("#watcher-button").click(() => {
+            const formValues = {
+                itemKeywords: itemKeywords.getValue(),
+                keywordOptions: keywordOptions.getValue(),
+                sortOptions: sortOptions.getValue(),
+                titleAndDesc: titleAndDescCheckbox.getValue(),
+                completedItems: completedItemsCheckbox.getValue(),
+                soldItems: soldItemsCheckbox.getValue(),
+                buyingFormat: buyingRadioGroup.getValue(),
+                itemCondition: itemConditionOptions.getValue(),
+            };
+
+            const itemWatcher = new ItemWatcher()
+            itemWatcher.addItemToWatch(formValues)
+        });
+
         $("#search-button").on("click", async function () {
             const formValues = {
                 itemKeywords: itemKeywords.getValue(),
@@ -138,8 +157,7 @@ export function initializeItemSearchForm() {
             };
 
             try {
-                const ebayFetcher = new EbayFetcher(formValues);
-                const items = await ebayFetcher.fetchEbayItems();
+                const items = await EbayFetcher.fetchEbayItems(formValues);
                 const itemDisplayManager = new ItemDisplayManager('items-display-section', 'items-analytics-section');
                 itemDisplayManager.displayItems(items);
                 itemDisplayManager.displayItemAnalytics(items);

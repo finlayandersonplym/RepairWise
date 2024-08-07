@@ -60,4 +60,17 @@ export class Item {
         const postagePrice = this.#postage.toLowerCase().includes('free') ? 0 : Item.#parsePrice(this.#postage);
         return itemPrice + postagePrice;
     }
+
+    toJSON() {
+        return {
+            name: this.getName(),
+            price: this.getPrice(),
+            condition: this.getCondition(),
+            postage: this.getPostage(),
+            seller: this.getSeller(),
+            imageUrl: this.getImageUrl(),
+            link: this.getLink(),
+            soldDate: this.getSoldDate()
+        };
+    }
 }
