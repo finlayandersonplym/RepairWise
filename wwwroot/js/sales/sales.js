@@ -1,6 +1,7 @@
-import { initializeSalesAnalytics } from "./statistics.js";
+import { SalesAnalytics } from "./statistics.js";
 
 
 export function initializeSalesPage() {
-    initializeSalesAnalytics();
+    const salesAnalytics = new SalesAnalytics();
+    salesAnalytics.initializeSalesAnalytics();
 }

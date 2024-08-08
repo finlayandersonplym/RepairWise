@@ -1,6 +1,6 @@
-import { initializeItemSearchForm } from "./item-evaluator.js";
-
+import { ItemEvaluator } from "./item-evaluator.js";
 
 export function initializeEvaluatePage() {
-    initializeItemSearchForm();
+    const itemEvaluator = new ItemEvaluator("item-search-form");
+    itemEvaluator.initialize();
 }

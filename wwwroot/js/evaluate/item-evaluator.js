@@ -1,66 +1,113 @@
 import { ComponentFactory } from "../components/component-factory.js";
-import { EbayFetcher } from "../scraping/ebay-fetcher.js"; 
+import { EbayFetcher } from "../scraping/ebay-fetcher.js";
 import { ItemDisplayManager } from "./item-display-manager.js";
-import { ItemWatcher } from "../dashboard/item-watch-form.js";
+import { ItemWatcher } from "../dashboard/item-watcher.js";
 
-export function initializeItemSearchForm() {
-    $("#item-search-form").load("pages/evaluate/item-search-form.html", () => {
-        const componentFactory = new ComponentFactory();
+export class ItemEvaluator {
+    #formId;
+    #componentFactory;
+    #itemKeywords;
+    #keywordOptions;
+    #searchOptionsCheckBoxGroup;
+    #titleAndDescCheckbox;
+    #completedItemsCheckbox;
+    #soldItemsCheckbox;
+    #buyingRadioGroup;
+    #itemConditionOptions;
+    #sortOptions;
 
-        const itemKeywords = componentFactory.createTextBox({
+    constructor(formId) {
+        this.#formId = formId;
+    }
+
+    initialize() {
+        $(`#${this.#formId}`).load("pages/evaluate/item-search-form.html", () => {
+            this.#componentFactory = new ComponentFactory();
+
+            this.#itemKeywords = this.#createItemKeywords();
+            this.#keywordOptions = this.#createKeywordOptions();
+            this.#searchOptionsCheckBoxGroup = this.#createSearchOptionsCheckBoxGroup();
+            this.#titleAndDescCheckbox = this.#createTitleAndDescCheckbox();
+            this.#completedItemsCheckbox = this.#createCompletedItemsCheckbox();
+            this.#soldItemsCheckbox = this.#createSoldItemsCheckbox();
+            this.#buyingRadioGroup = this.#createBuyingRadioGroup();
+            this.#itemConditionOptions = this.#createItemConditionOptions();
+            this.#sortOptions = this.#createSortOptions();
+
+            this.#appendButtons();
+            this.#setupEventListeners();
+        });
+    }
+
+    #createItemKeywords() {
+        return this.#componentFactory.createTextBox({
             elementId: "#item-keywords",
-            parentElement: "#item-search-form",
+            parentElement: `#${this.#formId}`,
             additionalClasses: "col-2",
             inputType: "string",
             defaultText: "",
             displayProperty: "Item Keywords",
         });
+    }
 
-        const keywordOptions = componentFactory.createSelect({
+    #createKeywordOptions() {
+        return this.#componentFactory.createSelect({
             elementId: "#keyword-options",
-            parentElement: "#item-search-form",
+            parentElement: `#${this.#formId}`,
             additionalClasses: "col-2",
             options: ["All words, any order", "Any words, exact order", "Exact words, exact order", "Exact words, any order"],
             displayProperty: "Keyword Options",
             defaultValue: "Exact words, exact order",
         });
+    }
 
-        const searchOptionsCheckBoxGroup = componentFactory.createCheckBoxGroup({
+    #createSearchOptionsCheckBoxGroup() {
+        const searchOptionsCheckBoxGroup = this.#componentFactory.createCheckBoxGroup({
             groupId: "#search-options",
-            parentElement: "#item-search-form",
+            parentElement: `#${this.#formId}`,
         });
 
-        componentFactory.createLabel({
+        this.#componentFactory.createLabel({
             elementId: "#search-option-label",
             parentElement: "#search-options",
             label: "Search Including",
         });
 
-        const titleAndDescCheckbox = searchOptionsCheckBoxGroup.addCheckBox({
+        return searchOptionsCheckBoxGroup;
+    }
+
+    #createTitleAndDescCheckbox() {
+        return this.#searchOptionsCheckBoxGroup.addCheckBox({
             elementId: "#title-and-description-checkbox",
             label: "Title and description",
             checked: false,
         });
+    }
 
-        const completedItemsCheckbox = searchOptionsCheckBoxGroup.addCheckBox({
+    #createCompletedItemsCheckbox() {
+        return this.#searchOptionsCheckBoxGroup.addCheckBox({
             elementId: "#completed-items-checkbox",
             label: "Completed Items",
             checked: false,
         });
+    }
 
-        const soldItemsCheckbox = searchOptionsCheckBoxGroup.addCheckBox({
+    #createSoldItemsCheckbox() {
+        return this.#searchOptionsCheckBoxGroup.addCheckBox({
             elementId: "#sold-items-checkbox",
             label: "Sold Items",
             checked: false,
         });
+    }
 
-        const buyingRadioGroup = componentFactory.createRadioOptionGroup({
+    #createBuyingRadioGroup() {
+        const buyingRadioGroup = this.#componentFactory.createRadioOptionGroup({
             groupId: "#buying-format-options",
-            parentElement: "#item-search-form",
+            parentElement: `#${this.#formId}`,
             name: "buyingFormat"
         });
 
-        componentFactory.createLabel({
+        this.#componentFactory.createLabel({
             elementId: "#buying-format-radio-group-label",
             parentElement: "#buying-format-options",
             label: "Buying Format",
@@ -101,17 +148,23 @@ export function initializeItemSearchForm() {
             checked: false,
         });
 
-        const itemConditionOptions = componentFactory.createSelect({
+        return buyingRadioGroup;
+    }
+
+    #createItemConditionOptions() {
+        return this.#componentFactory.createSelect({
             elementId: "#item-condition-options",
-            parentElement: "#item-search-form",
+            parentElement: `#${this.#formId}`,
             additionalClasses: "col-2",
             options: ["All", "New", "Used", "Parts"],
             displayProperty: "Item Condition",
         });
+    }
 
-        const sortOptions = componentFactory.createSelect({
+    #createSortOptions() {
+        return this.#componentFactory.createSelect({
             elementId: "#sort-options",
-            parentElement: "#item-search-form",
+            parentElement: `#${this.#formId}`,
             additionalClasses: "col-3",
             options: [
                 "Time: ending soonest",
@@ -124,47 +177,46 @@ export function initializeItemSearchForm() {
             ],
             displayProperty: "Sort by",
         });
+    }
 
-        $("#item-search-form").append('<button id="search-button" class="btn btn-primary">Search</button>');
-        $("#item-search-form").append('<button id="watcher-button" class="btn btn-primary">Add To Watch</button>');
+    #appendButtons() {
+        $(`#${this.#formId}`).append('<button id="search-button" class="btn btn-primary">Search</button>');
+        $(`#${this.#formId}`).append('<button id="watcher-button" class="btn btn-primary">Add To Watch</button>');
+    }
 
+    #setupEventListeners() {
         $("#watcher-button").click(() => {
-            const formValues = {
-                itemKeywords: itemKeywords.getValue(),
-                keywordOptions: keywordOptions.getValue(),
-                sortOptions: sortOptions.getValue(),
-                titleAndDesc: titleAndDescCheckbox.getValue(),
-                completedItems: completedItemsCheckbox.getValue(),
-                soldItems: soldItemsCheckbox.getValue(),
-                buyingFormat: buyingRadioGroup.getValue(),
-                itemCondition: itemConditionOptions.getValue(),
-            };
-
-            const itemWatcher = new ItemWatcher()
-            itemWatcher.addItemToWatch(formValues)
+            const formValues = this.#getFormValues();
+            const itemWatcher = new ItemWatcher();
+            itemWatcher.addItemToWatch(formValues);
         });
 
-        $("#search-button").on("click", async function () {
-            const formValues = {
-                itemKeywords: itemKeywords.getValue(),
-                keywordOptions: keywordOptions.getValue(),
-                sortOptions: sortOptions.getValue(),
-                titleAndDesc: titleAndDescCheckbox.getValue(),
-                completedItems: completedItemsCheckbox.getValue(),
-                soldItems: soldItemsCheckbox.getValue(),
-                buyingFormat: buyingRadioGroup.getValue(),
-                itemCondition: itemConditionOptions.getValue(),
-            };
+        $("#search-button").on("click", async () => {
+            const formValues = this.#getFormValues();
 
             try {
                 const items = await EbayFetcher.fetchEbayItems(formValues);
                 const itemDisplayManager = new ItemDisplayManager('items-display-section', 'items-analytics-section');
                 itemDisplayManager.displayItems(items);
                 itemDisplayManager.displayItemAnalytics(items);
-
             } catch (error) {
                 console.error('Error fetching eBay items:', error);
+                alert("Invalid Search Term or CORS Proxy");
             }
         });
-    });
+    }
+
+    #getFormValues() {
+        return {
+            itemKeywords: this.#itemKeywords.getValue(),
+            keywordOptions: this.#keywordOptions.getValue(),
+            sortOptions: this.#sortOptions.getValue(),
+            titleAndDesc: this.#titleAndDescCheckbox.getValue(),
+            completedItems: this.#completedItemsCheckbox.getValue(),
+            soldItems: this.#soldItemsCheckbox.getValue(),
+            buyingFormat: this.#buyingRadioGroup.getValue(),
+            itemCondition: this.#itemConditionOptions.getValue(),
+        };
+    }
 }
+

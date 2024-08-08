@@ -210,6 +210,50 @@ export class ChartManager {
         });
     }
 
+    static renderItemsSoldByDayChart(labels, data, elementId) {
+        const ctx = document.getElementById(elementId).getContext("2d");
+
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Items Sold by Day",
+                    data: data,
+                    backgroundColor: "rgba(153, 102, 255, 0.2)",
+                    borderColor: "rgba(153, 102, 255, 1)",
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: "time",
+                        time: {
+                            unit: "day"
+                        },
+                        title: {
+                            display: true,
+                            text: "Date"
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: "Number of Items Sold"
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
     static #getItemsWithSoldDate(items) {
         return items.map(item => {
             const soldHistory = item.history.find(entry => entry.updateProperty === "state" && entry.newValue === "Sold");

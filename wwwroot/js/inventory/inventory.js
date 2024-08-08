@@ -1,29 +1,6 @@
-import { loadItemEditor } from "./item-editor.js";
-import { LocalStorageManager } from "../localstorage-utils.js";
-import { TableManager }  from "./table-manager.js";
-
-const localStorageManager = new LocalStorageManager();
-const tableManager = new TableManager("itemList", "#item-table", "#item-filter-text");
+import { InventoryManager } from "./item-editor.js"
 
 export function initializeInventoryPage() {
-    tableManager.attachFilterHandler();
-    tableManager.populateTable();
-
-    $("#add-items-button").click(() => {
-        loadItemEditor();
-    });
-
-    $("#export-items").click(() => {
-        localStorageManager.exportLocalStorageToFile("inventory");
-    });
-
-    $("#file-input").on("change", function () {
-        const file = this.files[0];
-        localStorageManager.importJsonFileToLocalStorage(file);
-        tableManager.populateTable();
-    });
+    const inventoryManager = new InventoryManager("itemList", "#item-table", "#item-filter-text");
+    inventoryManager.initializeInventoryPage();
 }
-
-$(document).ready(function () {
-    initializeInventoryPage();
-});

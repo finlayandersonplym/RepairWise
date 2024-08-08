@@ -1,4 +1,4 @@
-import { openExistingItem } from "./item-editor.js";
+import { InventoryManager } from "./item-editor.js";
 import { LocalStorageManager } from "../localstorage-utils.js";
 
 export class TableManager {
@@ -39,7 +39,8 @@ export class TableManager {
         $(".interactive-row").click(function (event) {
             if (event.target.type !== "checkbox") {
                 const itemId = $(this).data("id");
-                openExistingItem(itemId);
+                const itemManager = new InventoryManager();
+                itemManager.openExistingItem(itemId);
             }
         });
     }

@@ -1,24 +1,22 @@
 import { LocalStorageManager } from "../localstorage-utils.js";
 import { ChartManager } from "../charts/chart-manager.js";
-import { ItemWatcher } from "./item-watch-form.js";
+import { ItemWatcher } from "./item-watcher.js";
 
 export class DashboardManager {
     #localStorageManager;
-    
+    #itemWatcher;
+
     constructor() {
         this.#localStorageManager = new LocalStorageManager();
+        this.#itemWatcher = new ItemWatcher();
     }
 
     displayTotalItems(elementId) {
-
         const items = this.#localStorageManager.getJsonItems("itemList");
 
         const totalItemsElement = document.getElementById(elementId);
         totalItemsElement.innerHTML = `<p>Total Items: ${items.length}</p>`;
     }
-
-
-    
 
     displayPriceAnalysis(elementId) {
         const items = this.#localStorageManager.getJsonItems("itemList");
@@ -73,6 +71,51 @@ export class DashboardManager {
 
         const categories = this.#groupByCategory(unsoldItems);
         ChartManager.renderInventoryCategoryChart(categories, elementId);
+    }
+
+    async displayItemWatchChanges(elementId) {
+        const changes = await this.#itemWatcher.hasItemChanged();
+
+        let changesHTML = '<h3>Item Watch Changes</h3>';
+
+        changes.forEach(change => {
+            changesHTML += `<div id="search-options">Search Options: ${JSON.stringify(change.searchOptions)}</div>`;
+            changesHTML += '<ul>';
+            change.changes.added.forEach(item => {
+                changesHTML += `<li class="added"><span>Added:</span> <a href="${item.link}">${item.name}</a> - ${item.price}</li>`;
+            });
+            change.changes.removed.forEach(item => {
+                changesHTML += `<li class="removed"><span>Removed:</span> <a href="${item.link}">${item.name}</a> - ${item.price}</li>`;
+            });
+            change.changes.changed.forEach(item => {
+                changesHTML += `<li class="changed"><a href="${item.link}">Item Changed:</a><ul>`;
+                Object.keys(item.changes).forEach(key => {
+                    changesHTML += `<li>${key}: ${item.changes[key].old} -> ${item.changes[key].new}</li>`;
+                });
+                changesHTML += `</ul></li>`;
+            });
+            changesHTML += '</ul>';
+        });
+
+        const itemWatchElement = document.getElementById(elementId);
+        itemWatchElement.innerHTML = changesHTML;
+    }
+
+    async displayItemsSoldByDayChart(elementId) {
+        const items = this.#localStorageManager.getJsonItems("itemList");
+        const soldItems = items.filter(item => item.state === "Sold");
+
+        const soldDates = soldItems.map(item => new Date(item.sold_date).toLocaleDateString());
+
+        const dateCount = soldDates.reduce((acc, date) => {
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+        }, {});
+
+        const labels = Object.keys(dateCount).sort((a, b) => new Date(a) - new Date(b));
+        const data = labels.map(date => dateCount[date]);
+
+        ChartManager.renderItemsSoldByDayChart(labels, data, elementId);
     }
 
     #calculateMedian(prices) {

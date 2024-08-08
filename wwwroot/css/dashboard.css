@@ -1,1 +1,87 @@
-﻿.
+﻿.section-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+#item-watch-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+}
+
+#item-watch-section h4 {
+    font-size: 1.2em;
+    margin-top: 20px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+#item-watch-section ul {
+    list-style-type: none;
+    padding-left: 0;
+    box-sizing: border-box;
+}
+
+#item-watch-section li {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    word-wrap: break-word; /* Ensure words break within the container */
+    overflow-wrap: break-word; /* For better word wrapping */
+}
+
+    #item-watch-section li span {
+        font-weight: bold;
+    }
+
+#item-watch-section .added {
+    border-left: 5px solid green;
+}
+
+#item-watch-section .removed {
+    border-left: 5px solid red;
+}
+
+#item-watch-section .changed {
+    border-left: 5px solid orange;
+}
+
+#search-options {
+    padding: 10px;
+    background-color: #eef;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Ensure words break within the container */
+    overflow-wrap: break-word; /* For better word wrapping */
+}
+
+/* Specific styles for nested list inside changed items */
+#item-watch-section .changed ul {
+    list-style-type: none;
+    padding-left: 20px;
+    margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+    #item-watch-section .changed ul li {
+        background-color: #fff;
+        margin-bottom: 5px;
+        padding: 5px;
+        border-radius: 3px;
+        box-shadow: none;
+        display: block;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }

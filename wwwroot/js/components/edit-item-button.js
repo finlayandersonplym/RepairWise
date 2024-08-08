@@ -1,5 +1,5 @@
 import { EditableElement } from "./editable-element.js";
-import { loadItemEditor } from "../inventory/item-editor.js";
+import { InventoryManager } from "../inventory/item-editor.js";
 
 export class EditItemButton extends EditableElement {
     constructor({ elementId, parentElement, additionalClasses = "" }, itemId) {
@@ -15,6 +15,9 @@ export class EditItemButton extends EditableElement {
         `;
         this.appendHtml(editButtonHTML);
         this.setElement($(`#${this.getElementId()}`));
-        this.getElement().on("click", () => loadItemEditor(this.getItemId()));
+        this.getElement().on("click", () => {
+            const itemManager = new InventoryManager();
+            itemManager.loadItemEditor(this.getItemId());
+        });
     }
 }
