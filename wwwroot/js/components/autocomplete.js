@@ -2,10 +2,12 @@ import { EditableElement } from "./editable-element.js";
 
 export class Autocomplete extends EditableElement {
     #updateProperty;
+    #defaultText;
 
-    constructor({ elementId, updateProperty, parentElement, additionalClasses = "", displayProperty = "" }, itemId) {
+    constructor({ elementId, updateProperty, parentElement, additionalClasses = "", displayProperty = "", defaultText = "" }, itemId) {
         super({ elementId, parentElement, additionalClasses, displayProperty }, itemId);
         this.#updateProperty = updateProperty;
+        this.#defaultText = defaultText;
         this.#render();
     }
 
@@ -13,7 +15,7 @@ export class Autocomplete extends EditableElement {
         const newAutocompleteHTML = `
             <div class="autocomplete ${this.getAdditionalClasses()}">
                 <h3>${this.getFormattedDisplayProperty(this.getDisplayProperty())}</h3>
-               <div class="text-box editable-box" id="${this.getElementId()}" contenteditable="true" data-placeholder="Enter ${this.getDisplayProperty()}"></div>
+                <div class="text-box editable-box" id="${this.getElementId()}" contenteditable="true" data-placeholder="Enter ${this.getDisplayProperty()}">${this.#defaultText}</div>
             </div>
         `;
         this.appendHtml(newAutocompleteHTML);

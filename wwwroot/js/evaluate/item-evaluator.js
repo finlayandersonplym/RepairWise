@@ -54,7 +54,7 @@ export class ItemEvaluator {
         return this.#componentFactory.createSelect({
             elementId: "#keyword-options",
             parentElement: `#${this.#formId}`,
-            additionalClasses: "col-2",
+            additionalClasses: "col-3",
             options: ["All words, any order", "Any words, exact order", "Exact words, exact order", "Exact words, any order"],
             displayProperty: "Keyword Options",
             defaultValue: "Exact words, exact order",

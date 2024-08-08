@@ -202,7 +202,8 @@ export class InventoryManager {
                 updateProperty: "category",
                 parentElement: "#item-edit-section",
                 additionalClasses: "edit-gap-sizing",
-                displayProperty: "Category"
+                displayProperty: "Category",
+                defaultText: item.category,
             });
 
             const tableManager = new TableManager("itemList", "#item-table", "#item-filter-text");

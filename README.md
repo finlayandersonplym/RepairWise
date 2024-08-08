@@ -1,1 +1,6 @@
 # RepairWise
+## COMP1004 SPA
+### Introduction
+RepairWise is a comprehensive web application designed to assist repair services in managing inventory and assessing the value of repairing and reselling electronics. This project aims to provide a superior solution to the typical spreadsheet-based tracking systems commonly used in the repair service industry. By offering detailed insights into the cost-effectiveness of repairs, the application helps users make informed decisions, leading to financial savings and reduced electronic waste.
+### Project vision
+I aim to develop user-friendly, free software which will provide any repair service the ability to manage their inventory. An essential feature will allow users to quickly estimate the value of repairing a given electronic device regarding factors such as cost, resale value, market trends and historical data. By providing this software, I aim to increase the efficiency of repair services and lower the barrier to entry for using repair software. 
