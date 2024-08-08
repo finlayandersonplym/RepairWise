@@ -2,14 +2,14 @@ import { initializeInventoryPage } from "./inventory/inventory.js";
 import { initializeEvaluatePage } from "./evaluate/evaluate.js";
 import { initializeSalesPage } from "./sales/sales.js";
 import { initializeDashboard } from "./dashboard/dashboard.js";
-import { intitalizeSearchBar } from "./searchbar.js"
+import { initializeSearchBar } from "./searchbar.js"
 export class PageManager {
     constructor() {
         this.init();
     }
 
     init() {
-        intitalizeSearchBar();
+        initializeSearchBar();
         this.attachNavLinkHandler();
     }
 
